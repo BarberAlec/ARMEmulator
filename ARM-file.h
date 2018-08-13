@@ -2,6 +2,9 @@
 #include <vector>
 #include "instruction.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <bitset>
 /**
  * 
  * 
@@ -20,6 +23,16 @@ public:
 
     bool CompileToMachineInstructions ();
 
+    void addSourceFile (std::string fileName);
+
+    void closeSourceFile ();
+
+    void printRegisters ();
+
+    void loadSourceFile ();
+
+    void executeFile ();
+
 private:
 
     // bit 4 to 7 are out of bounds and should not be used
@@ -32,4 +45,5 @@ private:
     std::vector<instruction> instructionVect;
     std::vector<uint32_t> machineInstructionVect;
 
+    std::ifstream FILE;
 };

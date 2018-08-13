@@ -27,7 +27,7 @@ private:
 
 
 int main (){
-    std::cerr<<"BOOTING ARMULATOR";
+    std::cerr<<"BOOTING ARMEULATOR";
 
     for (int i = 0; i < 2000000000; i++){
         if (i%300000691 == 0){
@@ -36,5 +36,11 @@ int main (){
 
     }
     std::cout<<std::endl;
+
+    ARMFile aFile;
+    aFile.addSourceFile ("example.txt");
+    aFile.printRegisters ();
+    aFile.executeFile ();
+    aFile.printRegisters ();
     return 0;
 }

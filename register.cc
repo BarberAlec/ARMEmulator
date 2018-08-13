@@ -9,6 +9,10 @@ void reg::setMem (uint32_t val){
     mem = val;
 }
 
+uint32_t reg::getMem (){
+    return mem;
+}
+
 void reg::setMemWithUpdate (uint32_t val){
     mem = val;
 
