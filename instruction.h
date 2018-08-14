@@ -24,6 +24,8 @@ public:
 
     instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3);
 
+    instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3);
+
     enum enum_operats{
         UNDEFINED,
         MOV,

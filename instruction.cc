@@ -127,6 +127,24 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3)
     cond_flags = NULL;
 }
 
+instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3){
+    opperand1 = ar1;
+    opperand2 = NULL;
+    opperand3 = ar3;
+
+    NR_operand2 = ar2;
+    NR_operand3 = 0;
+
+    numberOperands = 3;
+
+    machineInstruction = 0;
+    machineCodeGenerated = false;
+
+    Operat = string2Operats (command);
+    
+    cond_flags = NULL;
+}
+
 instruction::enum_operats instruction::string2Operats (std::string input){
     if (input.compare("MOV") == 0){
         return MOV;
