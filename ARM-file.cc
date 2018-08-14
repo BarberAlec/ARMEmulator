@@ -81,7 +81,7 @@ void ARMFile::printRegistersBits (){
 
 void ARMFile::printRegistersHex (){
     std::cout  << std::setfill('0');
-    
+
     std::cout << "_____________________________________________" << std::endl;
 
     std::cout << "|    r0    |    r1    |    r2    |    r3    |" << std::endl;
@@ -309,11 +309,22 @@ reg* ARMFile::string2Reg (std::string R){
 
 uint32_t ARMFile::string2Num (std::string N){
     // TODO search for other types of number values
-    std::string num_val = "";
+    std::string num_val = "";   
 
+    // This mess below is because stoi takes a shortcut and converts everything to signed 32 bit, anything greater than 0x7fffffff will throw an error
     if (N.at (0) == '0' && N.at (1) == 'x'){
         num_val = N.substr (2, N.size () - 2);
-        return stoi (num_val, 0, 16);
+        if (num_val.size () == 8){
+            if (num_val.at (0) > '7'){
+                return (stoi (num_val.substr(1,7), 0, 16) + stoi ( std::string(1,num_val.at (0)), 0, 16) * 0x10000000);
+            }
+            else{
+                return stoi (num_val, 0, 16);
+            }
+        }
+        else{
+            return stoi (num_val, 0, 16);
+        }
     }
     else if (N.at (0) == '#'){
         // Decimal value

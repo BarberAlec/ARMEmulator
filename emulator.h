@@ -6,7 +6,12 @@
  * 
  * Over arching Control Class 
  * 
- *
+ *  Overall todo list:
+ *  > Implement most common instructions                                                X
+ *  > Implement add on bit at end of instruction (like roate shift etc.)
+ *  > Implement PC accurately
+ *  > implement basic B branchs and labels
+ *  > implement non register memory and insturctions to access it
  *  
  * 
  **/
@@ -40,10 +45,11 @@ int main (){
     ARMFile aFile;
     aFile.addSourceFile ("example.txt");
     aFile.loadSourceFile ();
-    aFile.printRegistersHex ();
+
     aFile.executeFile ();
-    std::cout << std::endl << std::endl;
+
     aFile.printRegistersHex ();
+
     aFile.closeSourceFile ();
     return 0;
 }

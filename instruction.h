@@ -1,6 +1,7 @@
 //#include "useful-functions.h"
 #include "register.h"
 #include <iostream>
+#include <limits>
 /**
  * 
  * 
@@ -12,7 +13,7 @@ class instruction{
 public:
 
     // Various Constructors for different scenarios
-    
+
     instruction ();
 
     instruction (std::string command, reg* ar1);
