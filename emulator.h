@@ -40,9 +40,10 @@ int main (){
     ARMFile aFile;
     aFile.addSourceFile ("example.txt");
     aFile.loadSourceFile ();
-    aFile.printRegisters ();
+    aFile.printRegistersHex ();
     aFile.executeFile ();
-    aFile.printRegisters ();
+    std::cout << std::endl << std::endl;
+    aFile.printRegistersHex ();
     aFile.closeSourceFile ();
     return 0;
 }

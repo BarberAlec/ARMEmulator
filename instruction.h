@@ -10,6 +10,9 @@
 
 class instruction{
 public:
+
+    // Various Constructors for different scenarios
+    
     instruction ();
 
     instruction (std::string command, reg* ar1);
@@ -27,11 +30,42 @@ public:
     instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3);
 
     enum enum_operats{
+        // X designates that it has been implemented
         UNDEFINED,
-        MOV,
-        ADD,
-        SUB,
-        CMP
+        ADC,
+        ADD,        // X
+        AND,        // Implement
+        B,
+        BIC,
+        BL,
+        BX,
+        CDP,
+        CMN,
+        CMP,
+        EOR,        // Implement
+        LDC,
+        LDM,
+        LDR,
+        MCR,
+        MLA,
+        MOV,        // X
+        MRC,
+        MRS,
+        MSR,
+        MUL,        // Implement
+        MVN,
+        ORR,        // Implement
+        RSB,
+        RSC,
+        SBC,
+        STC,
+        STM,
+        STR,
+        SUB,        // X
+        SWI,
+        SWP,
+        TEQ,
+        TST
     };
 
     // Get Machine code 32 bit instruction
@@ -47,9 +81,24 @@ public:
     void execute ();
 
 private:
-
+    // To be implemented soon !!!!!
     void generateMachineInstruction ();
 
+
+    // Helper functions for execute () to keep code clean and maintainable
+    void executeADD ();
+
+    void executeAND ();
+
+    void executeEOR ();
+
+    void executeMOV ();
+
+    void executeMUL ();
+
+    void executeORR ();
+
+    void executeSUB ();
 
     // General Organisation Variables
     uint8_t numberOperands;

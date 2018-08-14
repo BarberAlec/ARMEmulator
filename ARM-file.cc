@@ -49,34 +49,66 @@ void ARMFile::closeSourceFile (){
     }
 }
 
-void ARMFile::printRegisters (){
-    std::cout << "_____________________________________" << std::endl;
+void ARMFile::printRegistersBits (){
+    std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
 
-    std::cout << "|   r0   |   r1   |   r2   |   r3   |" << std::endl;
-    std::cout << "|" << std::bitset<8> (r0.getMem ()) << "|" << std::bitset<8> (r1.getMem ()) << "|" << std::bitset<8> (r2.getMem ()) << "|" 
-                << std::bitset<8> (r3.getMem ()) << "|" << std::endl;
+    std::cout << "|               r0               |               r1               |               r2               |               r3               |" << std::endl;
+    std::cout << "|" << std::bitset<32> (r0.getMem ()) << "|" << std::bitset<32> (r1.getMem ()) << "|" << std::bitset<32> (r2.getMem ()) << "|" 
+                << std::bitset<32> (r3.getMem ()) << "|" << std::endl;
 
-    std::cout << "-------------------------------------" << std::endl;
-    std::cout << "_____________________________________" << std::endl;
+    std::cout << "-------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
 
-    std::cout << "|   r4   |   r5   |   r6   |   r7   |" << std::endl;
-    std::cout << "|" << std::bitset<8> (r4.getMem ()) << "|" << std::bitset<8> (r5.getMem ()) << "|" << std::bitset<8> (r6.getMem ()) << "|" 
-                << std::bitset<8> (r7.getMem ()) << "|" << std::endl;
+    std::cout << "|               r4               |               r5               |               r6               |               r7               |" << std::endl;
+    std::cout << "|" << std::bitset<32> (r4.getMem ()) << "|" << std::bitset<32> (r5.getMem ()) << "|" << std::bitset<32> (r6.getMem ()) << "|" 
+                << std::bitset<32> (r7.getMem ()) << "|" << std::endl;
 
-    std::cout << "-------------------------------------" << std::endl;
-    std::cout << "_____________________________________" << std::endl;
+    std::cout << "-------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
     
-    std::cout << "|   r8   |   r9   |   r10  |   r11  |" << std::endl;
-    std::cout << "|" << std::bitset<8> (r8.getMem ()) << "|" << std::bitset<8> (r9.getMem ()) << "|" << std::bitset<8> (r10.getMem ()) << "|" 
-                << std::bitset<8> (r11.getMem ()) << "|" <<std::endl;
+    std::cout << "|               r8               |               r9               |               r10              |               r11              |" << std::endl;
+    std::cout << "|" << std::bitset<32> (r8.getMem ()) << "|" << std::bitset<32> (r9.getMem ()) << "|" << std::bitset<32> (r10.getMem ()) << "|" 
+                << std::bitset<32> (r11.getMem ()) << "|" <<std::endl;
 
-    std::cout << "-------------------------------------" << std::endl;
-    std::cout << "_____________________________________" << std::endl;
+    std::cout << "-------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
     
-    std::cout << "|   r12  |   SP   |   LC   |   PC   |" << std::endl;
-    std::cout << "|" << std::bitset<8> (r12.getMem ()) << "|" << std::bitset<8> (SP.getMem ()) << "|" << std::bitset<8> (LP.getMem ()) << "|" 
-                << std::bitset<8> (PC.getMem ()) << "|" << std::endl;
-    std::cout << "-------------------------------------" << std::endl;
+    std::cout << "|               r12              |               SP               |               LC               |               PC               |" << std::endl;
+    std::cout << "|" << std::bitset<32> (r12.getMem ()) << "|" << std::bitset<32> (SP.getMem ()) << "|" << std::bitset<32> (LP.getMem ()) << "|" 
+                << std::bitset<32> (PC.getMem ()) << "|" << std::endl;
+    std::cout << "-------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+}
+
+void ARMFile::printRegistersHex (){
+    std::cout  << std::setfill('0');
+    
+    std::cout << "_____________________________________________" << std::endl;
+
+    std::cout << "|    r0    |    r1    |    r2    |    r3    |" << std::endl;
+    std::cout << "| " << std::setw(8) << std::hex <<  (r0.getMem ()) << " | " << std::setw(8) << std::hex <<  (r1.getMem ()) << " | " << std::setw(8) << std::hex <<  (r2.getMem ()) << " | " 
+                << std::setw(8) << std::hex <<  (r3.getMem ()) << " |" << std::endl;
+
+    std::cout << "---------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________" << std::endl;
+
+    std::cout << "|    r4    |    r5    |    r6    |    r7    |" << std::endl;
+    std::cout << "| " << std::setw(8) << std::hex <<  (r4.getMem ()) << " | " << std::setw(8) << std::hex <<  (r5.getMem ()) << " | " << std::setw(8) << std::hex <<  (r6.getMem ()) << " | " 
+                << std::setw(8) << std::hex <<  (r7.getMem ()) << " |" << std::endl;
+
+    std::cout << "---------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________" << std::endl;
+    
+    std::cout << "|    r8    |    r9    |    r10   |    r11   |" << std::endl;
+    std::cout << "| " << std::setw(8) << std::hex <<  (r8.getMem ()) << " | " << std::setw(8) << std::hex <<  (r9.getMem ()) << " | " << std::setw(8) << std::hex <<  (r10.getMem ()) << " | " 
+                << std::setw(8) << std::hex <<  (r11.getMem ()) << " |" <<std::endl;
+
+    std::cout << "---------------------------------------------" << std::endl;
+    std::cout << "_____________________________________________" << std::endl;
+    
+    std::cout << "|    r12   |    SP    |    LC    |    PC    |" << std::endl;
+    std::cout << "| " << std::setw(8) << std::hex <<  (r12.getMem ()) << " | " << std::setw(8) << std::hex <<  (SP.getMem ()) << " | " << std::setw(8) << std::hex <<  (LP.getMem ()) << " | " 
+                << std::setw(8) << std::hex <<  (PC.getMem ()) << " |" << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
 }
 
 void ARMFile::loadSourceFile (){
@@ -111,7 +143,9 @@ void ARMFile::loadSourceFile (){
                 std::cout << "FATAL ERROR: ARMFile::loadSourceFile could not comprehend line.... terminating" << std::endl;
                 std::exit (-1);
             }
-            command += charHelper;
+            if (charHelper != '\t'){
+                command += charHelper;
+            }
             charHelper = curr_line.at (++index);
         }
         
@@ -213,7 +247,6 @@ void ARMFile::loadSourceFile (){
 void ARMFile::executeFile (){
     if (instructionVect.size () != 0){
         for (int i = 0; i < instructionVect.size (); i++){
-            std::cout << "executing instruction: " << i << std::endl;
             instructionVect.at (i).execute ();
         }
     }
@@ -278,15 +311,14 @@ uint32_t ARMFile::string2Num (std::string N){
     // TODO search for other types of number values
     std::string num_val = "";
 
-    if (N.at (0) == '0' && N.at (0) == 'x'){
-        // Hex value
-        std::cout << "not implemented yet..." << std::endl;
-        //TODO implement...
+    if (N.at (0) == '0' && N.at (1) == 'x'){
+        num_val = N.substr (2, N.size () - 2);
+        return stoi (num_val, 0, 16);
     }
     else if (N.at (0) == '#'){
         // Decimal value
         num_val = N.substr (1, N.size () - 1);
-        return stoi(num_val);
+        return stoi (num_val);
     }
     else{
         std::cout << "ERROR: in ARMFile::string2Num, unknown Number type: " << N << std::endl;

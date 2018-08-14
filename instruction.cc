@@ -183,79 +183,15 @@ void instruction::execute (){
 
     switch (Operat){
         case MOV:
-            // TODO add assert here for opperands
-            if (numberOperands == 2){
-                if (opperand2 != NULL){
-                    opperand1->setMem (opperand2->getMem ());
-                }
-                else{
-                    opperand1->setMem (NR_operand2);
-                }
-            }
-            else{
-                std::cout << "Error: MOV only support two operands at the moment..." << std::endl;
-            }
-
+            executeMOV ();
             break;
 
         case ADD:
-
-            if (numberOperands == 2){
-                if (opperand2 == NULL){
-                    opperand1->setMem (opperand1->getMem () + NR_operand2);
-                }
-                else{
-                    opperand1->setMem (opperand1->getMem () + opperand2->getMem ());
-                }
-            }
-            else{
-                if (opperand2 == NULL){
-                    if (opperand3 == NULL){
-                        opperand1->setMem (NR_operand2 + NR_operand3);
-                    }
-                    else{
-                        opperand1->setMem (NR_operand2 + opperand3->getMem ());
-                    }
-                }
-                else{
-                    if (opperand3 == NULL){
-                        opperand1->setMem (opperand2->getMem () + NR_operand3);
-                    }
-                    else{
-                        opperand1->setMem (opperand2->getMem () + opperand3->getMem ());
-                    }
-                }
-            }
+            executeADD ();
             break;
 
         case SUB:
-            if (numberOperands == 2){
-                if (opperand2 == NULL){
-                    opperand1->setMem (opperand1->getMem () - NR_operand2);
-                }
-                else{
-                    opperand1->setMem (opperand1->getMem () - opperand2->getMem ());
-                }
-            }
-            else{
-                if (opperand2 == NULL){
-                    if (opperand3 == NULL){
-                        opperand1->setMem (NR_operand2 - NR_operand3);
-                    }
-                    else{
-                        opperand1->setMem (NR_operand2 - opperand3->getMem ());
-                    }
-                }
-                else{
-                    if (opperand3 == NULL){
-                        opperand1->setMem (opperand2->getMem () - NR_operand3);
-                    }
-                    else{
-                        opperand1->setMem (opperand2->getMem () - opperand3->getMem ());
-                    }
-                }
-            }
-
+            executeSUB ();
             break;
 
         case CMP:
@@ -268,4 +204,93 @@ void instruction::execute (){
             break;
     }
 
+}
+
+
+void instruction::executeADD (){
+    if (numberOperands == 2){
+        if (opperand2 == NULL){
+            opperand1->setMem (opperand1->getMem () + NR_operand2);
+        }
+        else{
+            opperand1->setMem (opperand1->getMem () + opperand2->getMem ());
+        }
+    }
+    else{
+        if (opperand2 == NULL){
+            if (opperand3 == NULL){
+                opperand1->setMem (NR_operand2 + NR_operand3);
+            }
+            else{
+                opperand1->setMem (NR_operand2 + opperand3->getMem ());
+            }
+        }
+        else{
+            if (opperand3 == NULL){
+                opperand1->setMem (opperand2->getMem () + NR_operand3);
+            }
+            else{
+                opperand1->setMem (opperand2->getMem () + opperand3->getMem ());
+            }
+        }
+    }
+}
+
+void instruction::executeAND (){
+
+}
+
+void instruction::executeEOR (){
+
+}
+
+void instruction::executeMOV (){
+    if (numberOperands == 2){
+        if (opperand2 != NULL){
+            opperand1->setMem (opperand2->getMem ());
+        }
+        else{
+            opperand1->setMem (NR_operand2);
+        }
+    }
+    else{
+        std::cout << "Error: MOV only support two operands at the moment..." << std::endl;
+    }
+}
+
+void instruction::executeMUL (){
+
+}
+
+void instruction::executeORR (){
+
+}
+
+void instruction::executeSUB (){
+    if (numberOperands == 2){
+        if (opperand2 == NULL){
+            opperand1->setMem (opperand1->getMem () - NR_operand2);
+        }
+        else{
+            opperand1->setMem (opperand1->getMem () - opperand2->getMem ());
+        }
+    }
+    else{
+        if (opperand2 == NULL){
+            if (opperand3 == NULL){
+                opperand1->setMem (NR_operand2 - NR_operand3);
+            }
+            else{
+                opperand1->setMem (NR_operand2 - opperand3->getMem ());
+            }
+        }
+        else{
+            if (opperand3 == NULL){
+                opperand1->setMem (opperand2->getMem () - NR_operand3);
+            }
+            else{
+                opperand1->setMem (opperand2->getMem () - opperand3->getMem ());
+            }
+        }
+    }
 }
