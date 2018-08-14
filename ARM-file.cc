@@ -2,7 +2,7 @@
 /**
  * TODO:
  * > implemtnet hex option in string2num
- * > 
+ * > Make loadSourceFile more readable and less abhorent.... that thing is disgusting....
  **/
 
 ARMFile::ARMFile(){
@@ -81,11 +81,11 @@ void ARMFile::printRegisters (){
 
 void ARMFile::loadSourceFile (){
     // TODO assert file has been opened
-    std::string command = "";
-    std::string arg1 = "";
-    std::string arg2 = "";
-    std::string arg3 = "";
-    reg* arg1_point = NULL;
+    std::string command;
+    std::string arg1;
+    std::string arg2;
+    std::string arg3;
+    reg* arg1_point;
     reg* arg2_point;
     reg* arg3_point;
     uint32_t arg2_int;
@@ -98,7 +98,13 @@ void ARMFile::loadSourceFile (){
     std::string curr_line;
     while (getline (FILE, curr_line)){
 
+        command = "";
+        arg1 = "";
+        arg2 = "";
+        arg3 = "";
         index = -1;
+
+
         charHelper = curr_line.at (++index);
         while (charHelper != ' '){
             if (charHelper == '\n' || charHelper == EOF){
@@ -118,8 +124,7 @@ void ARMFile::loadSourceFile (){
 
         // get first register
         if (arg1.at (0) == 'r' || arg1.at (0) == 'R'){
-            std::cout << string2Reg (arg1) << std::endl;
-            reg temp/*arg1_point*/ = string2Reg (arg1);
+            arg1_point = string2Reg (arg1);
         }
 
 
@@ -128,29 +133,30 @@ void ARMFile::loadSourceFile (){
         charHelper = curr_line.at (++index);
         while (charHelper != ',' && charHelper != '\n'){
             arg2 += charHelper;
+            if (index == (curr_line.size () - 1)){
+                break;
+            }
             charHelper = curr_line.at (++index);
         }
 
-
-        std::cout << "Got to arg 2 end" << std::endl;
-        if (charHelper != '\n'){
+        if (index != (curr_line.size () - 1)){
             // 3 arguments
             charHelper = curr_line.at (++index);
 
             // argument 3 parser
-            while (charHelper != '\n'){
+            for (;;){
                 arg3 += charHelper;
+                if (index == (curr_line.size () - 1)){
+                    break;
+                }
                 charHelper = curr_line.at (++index);
             }
-
             if (arg2.at (0) == 'r' || arg2.at (0) == 'R'){
                 // second argument is a register
                 arg2_point = string2Reg (arg2);
-
                 if (arg3.at (0) == 'r' || arg3.at (0) == 'R'){
                     // third argument is a register
                     arg3_point = string2Reg (arg3);
-
                     instruction x(command, arg1_point, arg2_point, arg3_point);
                     instructionVect.push_back (x);
                 }
@@ -207,6 +213,7 @@ void ARMFile::loadSourceFile (){
 void ARMFile::executeFile (){
     if (instructionVect.size () != 0){
         for (int i = 0; i < instructionVect.size (); i++){
+            std::cout << "executing instruction: " << i << std::endl;
             instructionVect.at (i).execute ();
         }
     }
@@ -216,19 +223,9 @@ void ARMFile::executeFile (){
 }
 
 reg* ARMFile::string2Reg (std::string R){
-    std::cout << "in string to reg, R.at (1) = " << R.at (1) << std::endl;
-    reg *point_help;
 
-    if (R.at (1) == '0'){
-        return &(r0);
-    }
-    /*
     switch (R.at (1)){
-        case '0':
-            point_help = &r0;
-            std::cout << "point_help: " << point_help << std::endl;
-            return point_help;
-            break;
+        case '0': return &r0;
         case '1': 
             if (R.size () == 2){
                 return &r1;
@@ -274,7 +271,7 @@ reg* ARMFile::string2Reg (std::string R){
             std::cout << "ERROR: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
             std::exit (-1);
             break;
-    }*/
+    }
 }
 
 uint32_t ARMFile::string2Num (std::string N){

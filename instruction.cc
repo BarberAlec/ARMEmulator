@@ -184,20 +184,77 @@ void instruction::execute (){
     switch (Operat){
         case MOV:
             // TODO add assert here for opperands
-            
-            opperand1->setMem (opperand2->getMem ());
+            if (numberOperands == 2){
+                if (opperand2 != NULL){
+                    opperand1->setMem (opperand2->getMem ());
+                }
+                else{
+                    opperand1->setMem (NR_operand2);
+                }
+            }
+            else{
+                std::cout << "Error: MOV only support two operands at the moment..." << std::endl;
+            }
 
             break;
 
         case ADD:
 
-            opperand1->setMem (opperand2->getMem () + opperand3->getMem ());
-
+            if (numberOperands == 2){
+                if (opperand2 == NULL){
+                    opperand1->setMem (opperand1->getMem () + NR_operand2);
+                }
+                else{
+                    opperand1->setMem (opperand1->getMem () + opperand2->getMem ());
+                }
+            }
+            else{
+                if (opperand2 == NULL){
+                    if (opperand3 == NULL){
+                        opperand1->setMem (NR_operand2 + NR_operand3);
+                    }
+                    else{
+                        opperand1->setMem (NR_operand2 + opperand3->getMem ());
+                    }
+                }
+                else{
+                    if (opperand3 == NULL){
+                        opperand1->setMem (opperand2->getMem () + NR_operand3);
+                    }
+                    else{
+                        opperand1->setMem (opperand2->getMem () + opperand3->getMem ());
+                    }
+                }
+            }
             break;
 
         case SUB:
-            
-            opperand1->setMem (opperand2->getMem () - opperand3->getMem ());
+            if (numberOperands == 2){
+                if (opperand2 == NULL){
+                    opperand1->setMem (opperand1->getMem () - NR_operand2);
+                }
+                else{
+                    opperand1->setMem (opperand1->getMem () - opperand2->getMem ());
+                }
+            }
+            else{
+                if (opperand2 == NULL){
+                    if (opperand3 == NULL){
+                        opperand1->setMem (NR_operand2 - NR_operand3);
+                    }
+                    else{
+                        opperand1->setMem (NR_operand2 - opperand3->getMem ());
+                    }
+                }
+                else{
+                    if (opperand3 == NULL){
+                        opperand1->setMem (opperand2->getMem () - NR_operand3);
+                    }
+                    else{
+                        opperand1->setMem (opperand2->getMem () - opperand3->getMem ());
+                    }
+                }
+            }
 
             break;
 

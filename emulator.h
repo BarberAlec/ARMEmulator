@@ -43,5 +43,6 @@ int main (){
     aFile.printRegisters ();
     aFile.executeFile ();
     aFile.printRegisters ();
+    aFile.closeSourceFile ();
     return 0;
 }

@@ -63,7 +63,7 @@ private:
     reg* opperand3;
 
     // Non-register arguments
-    uint32_t NR_operand2;
+    uint32_t NR_operand2;                   // Not Register Opperand
     uint32_t NR_operand3;
 
     // instruction and opperands coverted into a 32 bit instruction
