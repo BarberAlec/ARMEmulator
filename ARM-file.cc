@@ -1,7 +1,6 @@
 #include "ARM-file.h"
 /**
  * TODO:
- * > implemtnet hex option in string2num
  * > Make loadSourceFile more readable and less abhorent.... that thing is disgusting....
  **/
 
@@ -23,7 +22,12 @@ bool ARMFile::CompileToMachineInstructions (){
 }
 
 void ARMFile::initialiseMemory (){
-    
+    // kinda pointless at the moment to be honest ... but shure look
+
+    PC.setMem (0xA0000000);         // Setting program loaded to start at address 0xA0000000
+    SP.setMem (0x90000000);         // Setting Stack Pointer tostart from pretty damn arbiary position
+                                    // may change value in future....
+    LP.setMem (0xFFFFFFFF);         // Honestly cant remember the puspose of this lad...
 }
 
 void ARMFile::addSourceFile (std::string fileName){
@@ -122,6 +126,10 @@ void ARMFile::loadSourceFile (){
     reg* arg3_point;
     uint32_t arg2_int;
     uint32_t arg3_int;
+
+    std::string lab;
+
+    int lineNum = 0;
     
 
     char charHelper;
@@ -129,25 +137,50 @@ void ARMFile::loadSourceFile (){
 
     std::string curr_line;
     while (getline (FILE, curr_line)){
-
         command = "";
         arg1 = "";
         arg2 = "";
         arg3 = "";
+        lab = "";
         index = -1;
 
 
         charHelper = curr_line.at (++index);
-        while (charHelper != ' '){
-            if (charHelper == '\n' || charHelper == EOF){
-                std::cout << "FATAL ERROR: ARMFile::loadSourceFile could not comprehend line.... terminating" << std::endl;
-                std::exit (-1);
+        if (charHelper == '\t'){
+            // No label
+            while (charHelper != ' '){
+                if (charHelper == '\n' || charHelper == EOF){
+                    std::cout << "FATAL ERROR: ARMFile::loadSourceFile could not comprehend line.... terminating" << std::endl;
+                    std::exit (-1);
+                }
+                if (charHelper != '\t'){
+                    command += charHelper;
+                }
+                charHelper = curr_line.at (++index);
             }
-            if (charHelper != '\t'){
-                command += charHelper;
-            }
-            charHelper = curr_line.at (++index);
         }
+        else{
+            // Label present!
+            while (charHelper != ' '){
+                
+                lab += charHelper;
+                charHelper = curr_line.at (++index);
+            }
+            labels[lab] = 0xA0000000 + 8*lineNum;
+
+            charHelper = curr_line.at (++index);
+            while (charHelper != ' '){
+                if (charHelper == '\n' || charHelper == EOF){
+                    std::cout << "FATAL ERROR: ARMFile::loadSourceFile could not comprehend line.... terminating" << std::endl;
+                    std::exit (-1);
+                }
+                if (charHelper != '\t'){
+                    command += charHelper;
+                }
+                charHelper = curr_line.at (++index);
+            }
+        }
+        
         
         // Get first argument
         charHelper = curr_line.at (++index);
@@ -157,7 +190,7 @@ void ARMFile::loadSourceFile (){
         }
 
         // get first register
-        if (arg1.at (0) == 'r' || arg1.at (0) == 'R'){
+        if (arg1.at (0) == 'r' || arg1.at (0) == 'R' || arg1.at (0) == 'P' || arg1.at (0) == 'S' || arg1.at (0) == 'L'){
             arg1_point = string2Reg (arg1);
         }
 
@@ -185,10 +218,10 @@ void ARMFile::loadSourceFile (){
                 }
                 charHelper = curr_line.at (++index);
             }
-            if (arg2.at (0) == 'r' || arg2.at (0) == 'R'){
+            if (arg2.at (0) == 'r' || arg2.at (0) == 'R' || arg2.at (0) == 'P' || arg2.at (0) == 'S' || arg2.at (0) == 'L'){
                 // second argument is a register
                 arg2_point = string2Reg (arg2);
-                if (arg3.at (0) == 'r' || arg3.at (0) == 'R'){
+                if (arg3.at (0) == 'r' || arg3.at (0) == 'R' || arg3.at (0) == 'P' || arg3.at (0) == 'S' || arg3.at (0) == 'L'){
                     // third argument is a register
                     arg3_point = string2Reg (arg3);
                     instruction x(command, arg1_point, arg2_point, arg3_point);
@@ -206,7 +239,7 @@ void ARMFile::loadSourceFile (){
                 // second argument is a number
                 arg2_int = string2Num (arg2);
 
-                if (arg3.at (0) == 'r' || arg3.at (0) == 'R'){
+                if (arg3.at (0) == 'r' || arg3.at (0) == 'R' || arg3.at (0) == 'P' || arg3.at (0) == 'S' || arg3.at (0) == 'L'){
                     // third argument is a register
                     arg3_point = string2Reg (arg3);
 
@@ -226,7 +259,7 @@ void ARMFile::loadSourceFile (){
             // only 2 arguments
 
             // Is argument 2 a number or register
-            if (arg2.at (0) == 'r' || arg2.at (0) == 'R'){
+            if (arg2.at (0) == 'r' || arg2.at (0) == 'R' || arg2.at (0) == 'P' || arg2.at (0) == 'S' || arg2.at (0) == 'L'){
                 // second argument is a register
                 arg2_point = string2Reg (arg2);
 
@@ -241,14 +274,30 @@ void ARMFile::loadSourceFile (){
                 instructionVect.push_back (x);
             }
         }
+        lineNum++;
     }
 }
 
 void ARMFile::executeFile (){
     if (instructionVect.size () != 0){
-        for (int i = 0; i < instructionVect.size (); i++){
-            instructionVect.at (i).execute ();
+        for (;;){
+            PC.setMem (PC.getMem () + 8);
+            if ((PC.getMem () - 0xA0000008)/8 > (instructionVect.size () - 1) ){
+                std::cout << "Accessing unused memory, closing program" << std::endl;
+                break;
+            }
+            /*std::cout << std::endl;
+            printRegistersHex ();
+            std::cout << std::endl;*/
+            instructionVect.at ((PC.getMem () - 0xA0000008)/8).execute ();      // Not happy with implementation, will implement proper file that
+                                                                                // will eventually simulate a drive in the future
         }
+        
+
+        /*for (int i = 0; i < instructionVect.size (); i++){
+            PC.setMem (PC.getMem () + 8);
+            instructionVect.at (i).execute ();
+        }*/
     }
     else{
         std::cout << "ERROR: ARMFile::executeFile could not find any instructions" << std::endl;
@@ -256,7 +305,6 @@ void ARMFile::executeFile (){
 }
 
 reg* ARMFile::string2Reg (std::string R){
-
     switch (R.at (1)){
         case '0': return &r0;
         case '1': 
@@ -273,7 +321,7 @@ reg* ARMFile::string2Reg (std::string R){
                 return &r12;
             }
             else{
-                std::cout << "ERROR: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
+                std::cout << "ERROR_1: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
                 std::exit (-1);
             }
             break;
@@ -285,26 +333,26 @@ reg* ARMFile::string2Reg (std::string R){
         case '7': return &r7;
         case '8': return &r8;
         case '9': return &r9;
-        case 'S':
-            if (R.at (2) == 'P'){
+        case 'P':
+            if (R.at (0) == 'S'){
                 return &SP;
             }
-            break;
-        case 'L':
-            if (R.at (2) == 'P'){
+            if (R.at (0) == 'L'){
                 return &LP;
             }
             break;
-        case 'P':
-            if (R.at (2) == 'C'){
+        case 'C':
+            if (R.at (0) == 'P'){
                 return &PC;
             }
             break;
         default:
-            std::cout << "ERROR: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
+            std::cout << "ERROR_2: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
             std::exit (-1);
             break;
     }
+    std::cout << "ERROR_3: ARMFile::string2Reg could not find register ferernced... " << R << " exiting program" << std::endl;
+    std::exit (-1);
 }
 
 uint32_t ARMFile::string2Num (std::string N){

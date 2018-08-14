@@ -312,6 +312,17 @@ void instruction::execute (){
 
 }
 
+void instruction::printInstructionInfo (){
+    std::cout << "Information for Instruction" << std::endl;
+    std::cout << "Operate: " << Operat << std::endl;
+    std::cout << "numberOperands: " << numberOperands << std::endl;
+    std::cout << "opperand1: " << opperand1 << std::endl;
+    std::cout << "opperand2: " << opperand2 << std::endl;
+    std::cout << "opperand3: " << opperand3 << std::endl;
+    std::cout << "NR_operand2: " << NR_operand2 << std::endl;
+    std::cout << "NR_operand3: " << NR_operand3 << std::endl;
+}
+
 
 void instruction::executeADD (){
     if (numberOperands == 2){

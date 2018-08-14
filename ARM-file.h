@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <bitset>
+#include <map>
 /**
  * 
  * 
@@ -60,6 +61,8 @@ private:
     reg SP;
     reg LP;
     reg PC;
+
+    std::map<std::string, uint32_t> labels;
 
     std::vector<instruction> instructionVect;
     std::vector<uint32_t> machineInstructionVect;

@@ -81,6 +81,8 @@ public:
     // Called by Emulator to execute each instruction independently
     void execute ();
 
+    void printInstructionInfo ();
+
 private:
     // To be implemented soon !!!!!
     void generateMachineInstruction ();

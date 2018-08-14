@@ -9,7 +9,8 @@
  *  Overall todo list:
  *  > Implement most common instructions                                                X
  *  > Implement add on bit at end of instruction (like roate shift etc.)
- *  > Implement PC accurately
+ *  > Implement Comments with ;
+ *  > Implement PC accurately                                                           X
  *  > implement basic B branchs and labels
  *  > implement non register memory and insturctions to access it
  *  
