@@ -43,6 +43,8 @@ public:
     // Load contents of file
     void loadSourceFile ();
 
+    void firstPassLoadSourceFile ();
+
 
     // Execute File after loading contents
     void executeFile ();

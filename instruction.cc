@@ -5,6 +5,9 @@ instruction::instruction (){
     opperand2 = NULL;
     opperand3 = NULL;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = 0;
     NR_operand3 = 0;
 
@@ -23,6 +26,30 @@ instruction::instruction (std::string command, reg* ar1){
     opperand2 = NULL;
     opperand3 = NULL;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
+    NR_operand2 = 0;
+    NR_operand3 = 0;
+
+    numberOperands = 1;
+
+    machineInstruction = 0;
+    machineCodeGenerated = false;
+
+    Operat = string2Operats (command);
+
+    cond_flags = NULL;
+}
+
+instruction::instruction (std::string command, uint32_t ar1){
+    opperand1 = NULL;
+    opperand2 = NULL;
+    opperand3 = NULL;
+
+    pc = NULL;
+
+    NR_operand1 = ar1;
     NR_operand2 = 0;
     NR_operand3 = 0;
 
@@ -41,6 +68,9 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2){
     opperand2 = ar2;
     opperand3 = NULL;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = 0;
     NR_operand3 = 0;
 
@@ -59,6 +89,9 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2){
     opperand2 = NULL;
     opperand3 = NULL;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = ar2;
     NR_operand3 = 0;
 
@@ -77,6 +110,9 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
     opperand2 = ar2;
     opperand3 = ar3;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = 0;
     NR_operand3 = 0;
 
@@ -96,6 +132,9 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, uint32_t 
     opperand2 = NULL;
     opperand3 = NULL;
 
+    pc = NULL;
+    
+    NR_operand1 = 0;
     NR_operand2 = ar2;
     NR_operand3 = ar3;
 
@@ -114,6 +153,9 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3)
     opperand2 = ar2;
     opperand3 = NULL;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = 0;
     NR_operand3 = ar3;
 
@@ -132,6 +174,9 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3)
     opperand2 = NULL;
     opperand3 = ar3;
 
+    pc = NULL;
+
+    NR_operand1 = 0;
     NR_operand2 = ar2;
     NR_operand3 = 0;
 
@@ -268,6 +313,10 @@ void instruction::setCondFlags (uint8_t *ptr){
     cond_flags = ptr;
 }
 
+void instruction::setPCPointer (reg* p){
+    pc = p;
+}
+
 void instruction::execute (){
 
 
@@ -278,6 +327,10 @@ void instruction::execute (){
 
         case AND:
             executeAND ();
+            break;
+
+        case B:
+            executeB ();
             break;
 
         case EOR:
@@ -319,10 +372,10 @@ void instruction::printInstructionInfo (){
     std::cout << "opperand1: " << opperand1 << std::endl;
     std::cout << "opperand2: " << opperand2 << std::endl;
     std::cout << "opperand3: " << opperand3 << std::endl;
+    std::cout << "NR_operand1: " << NR_operand1 << std::endl;
     std::cout << "NR_operand2: " << NR_operand2 << std::endl;
     std::cout << "NR_operand3: " << NR_operand3 << std::endl;
 }
-
 
 void instruction::executeADD (){
     if (numberOperands == 2){
@@ -374,6 +427,15 @@ void instruction::executeAND (){
                 opperand1->setMem (opperand2->getMem () & opperand3->getMem ());
             }
         }
+    }
+}
+
+void instruction::executeB (){
+    if (numberOperands == 1){
+        pc->setMem (NR_operand1);
+    }  
+    else{
+        std::cout << "ERROR: B can only have one argument..." << std::endl;
     }
 }
 

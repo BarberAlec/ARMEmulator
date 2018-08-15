@@ -2,6 +2,7 @@
 /**
  * TODO:
  * > Make loadSourceFile more readable and less abhorent.... that thing is disgusting....
+ * > Fix bug where labels cannot start with S P or L
  **/
 
 ARMFile::ARMFile(){
@@ -124,6 +125,7 @@ void ARMFile::loadSourceFile (){
     reg* arg1_point;
     reg* arg2_point;
     reg* arg3_point;
+    uint32_t arg1_int;
     uint32_t arg2_int;
     uint32_t arg3_int;
 
@@ -136,6 +138,10 @@ void ARMFile::loadSourceFile (){
     int index;
 
     std::string curr_line;
+
+    // Load labels
+    firstPassLoadSourceFile ();
+
     while (getline (FILE, curr_line)){
         command = "";
         arg1 = "";
@@ -161,12 +167,11 @@ void ARMFile::loadSourceFile (){
         }
         else{
             // Label present!
+
+            // skip label
             while (charHelper != ' '){
-                
-                lab += charHelper;
                 charHelper = curr_line.at (++index);
             }
-            labels[lab] = 0xA0000000 + 8*lineNum;
 
             charHelper = curr_line.at (++index);
             while (charHelper != ' '){
@@ -181,10 +186,13 @@ void ARMFile::loadSourceFile (){
             }
         }
         
-        
         // Get first argument
         charHelper = curr_line.at (++index);
         while (charHelper != ','){
+            if (index == (curr_line.size () - 1)){
+                arg1 += charHelper;
+                break;
+            }
             arg1 += charHelper;
             charHelper = curr_line.at (++index);
         }
@@ -193,7 +201,17 @@ void ARMFile::loadSourceFile (){
         if (arg1.at (0) == 'r' || arg1.at (0) == 'R' || arg1.at (0) == 'P' || arg1.at (0) == 'S' || arg1.at (0) == 'L'){
             arg1_point = string2Reg (arg1);
         }
+        else{
+            arg1_int = string2Num (arg1);
+        }
 
+        // check if their is only one argument
+        if (index == (curr_line.size () - 1)){
+            instruction x(command, arg1_int);
+            x.setPCPointer (&PC);
+            instructionVect.push_back (x);
+            continue;
+        }
 
 
         // Parser for argument 2
@@ -225,6 +243,7 @@ void ARMFile::loadSourceFile (){
                     // third argument is a register
                     arg3_point = string2Reg (arg3);
                     instruction x(command, arg1_point, arg2_point, arg3_point);
+                    x.setPCPointer (&PC);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -232,6 +251,7 @@ void ARMFile::loadSourceFile (){
                     arg3_int = string2Num (arg3);
 
                     instruction x(command, arg1_point, arg2_point, arg3_int);
+                    x.setPCPointer (&PC);
                     instructionVect.push_back (x);
                 }
             }
@@ -244,6 +264,7 @@ void ARMFile::loadSourceFile (){
                     arg3_point = string2Reg (arg3);
 
                     instruction x(command, arg1_point, arg2_int, arg3_point);
+                    x.setPCPointer (&PC);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -251,6 +272,7 @@ void ARMFile::loadSourceFile (){
                     arg3_int = string2Num (arg3);
 
                     instruction x(command, arg1_point, arg2_int, arg3_int);
+                    x.setPCPointer (&PC);
                     instructionVect.push_back (x);
                 }
             }
@@ -264,13 +286,14 @@ void ARMFile::loadSourceFile (){
                 arg2_point = string2Reg (arg2);
 
                 instruction x(command, arg1_point, arg2_point);
+                x.setPCPointer (&PC);
                 instructionVect.push_back (x);
             }
             else{
                 // second argument is a number
                 arg2_int = string2Num (arg2);
-
                 instruction x(command, arg1_point, arg2_int);
+                x.setPCPointer (&PC);
                 instructionVect.push_back (x);
             }
         }
@@ -278,26 +301,45 @@ void ARMFile::loadSourceFile (){
     }
 }
 
+void ARMFile::firstPassLoadSourceFile (){
+    std::string curr_line;
+    int line_count = 0;
+    while (getline (FILE, curr_line)){
+        if (curr_line.at (0) != '\t'){
+            // We have ourselves a Label!! 
+            char charHelper;
+            int index = -1;
+            std::string lb = "";
+
+            charHelper = curr_line.at (++index);
+            while (charHelper != ' '){
+                lb += charHelper;
+                charHelper = curr_line.at (++index);
+            }
+            labels[lb] = 0xA0000000 + 8*line_count;
+
+        }
+        line_count++;
+    }
+    FILE.clear();
+    FILE.seekg(0, std::ios::beg);
+}
+
 void ARMFile::executeFile (){
     if (instructionVect.size () != 0){
         for (;;){
             PC.setMem (PC.getMem () + 8);
             if ((PC.getMem () - 0xA0000008)/8 > (instructionVect.size () - 1) ){
-                std::cout << "Accessing unused memory, closing program" << std::endl;
+                std::cout << "PROGRAM FINISHED (either that or accessing undefined memory lel)" << std::endl;
                 break;
             }
             /*std::cout << std::endl;
             printRegistersHex ();
             std::cout << std::endl;*/
+            //instructionVect.at ((PC.getMem () - 0xA0000008)/8).printInstructionInfo ();
             instructionVect.at ((PC.getMem () - 0xA0000008)/8).execute ();      // Not happy with implementation, will implement proper file that
                                                                                 // will eventually simulate a drive in the future
         }
-        
-
-        /*for (int i = 0; i < instructionVect.size (); i++){
-            PC.setMem (PC.getMem () + 8);
-            instructionVect.at (i).execute ();
-        }*/
     }
     else{
         std::cout << "ERROR: ARMFile::executeFile could not find any instructions" << std::endl;
@@ -379,7 +421,18 @@ uint32_t ARMFile::string2Num (std::string N){
         num_val = N.substr (1, N.size () - 1);
         return stoi (num_val);
     }
-    else{
-        std::cout << "ERROR: in ARMFile::string2Num, unknown Number type: " << N << std::endl;
+    else{  
+        //std::cout << "0" << std::endl;
+        if (labels.count (N) > 0){
+            //std::cout << "1" << std::endl;
+            // label exists
+            std::map<std::string,uint32_t>::iterator iter = labels.find (N);
+            //std::cout << "2" << std::endl;
+            return iter->second;
+        }
+        else{
+            //not a predefined label
+            std::cout << "ERROR: in ARMFile::string2Num, unknown Number type: " << N << std::endl;
+        }
     }
 }

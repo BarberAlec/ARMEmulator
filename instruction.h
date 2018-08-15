@@ -2,6 +2,7 @@
 #include "register.h"
 #include <iostream>
 #include <limits>
+#include <map>
 /**
  * 
  * 
@@ -17,6 +18,8 @@ public:
     instruction ();
 
     instruction (std::string command, reg* ar1);
+
+    instruction (std::string command, uint32_t ar1);
 
     instruction (std::string command, reg* ar1, reg* ar2);
 
@@ -35,15 +38,15 @@ public:
         UNDEFINED,
         ADC,
         ADD,        // X
-        AND,        // Implement
-        B,
+        AND,        // X
+        B,          // X
         BIC,
-        BL,
-        BX,
+        BL,         // Got my eyes on you
+        BX,         // you too laddy
         CDP,
         CMN,
         CMP,
-        EOR,        // Implement
+        EOR,        // X
         LDC,
         LDM,
         LDR,
@@ -53,9 +56,9 @@ public:
         MRC,
         MRS,
         MSR,
-        MUL,        // Implement
+        MUL,        // X
         MVN,
-        ORR,        // Implement
+        ORR,        // X
         RSB,
         RSC,
         SBC,
@@ -75,6 +78,8 @@ public:
     // Set condition Flags pointer
     void setCondFlags (uint8_t *ptr);
 
+    void setPCPointer (reg* p);
+
 
     enum_operats string2Operats (std::string input);
 
@@ -92,6 +97,8 @@ private:
     void executeADD ();
 
     void executeAND ();
+
+    void executeB ();
 
     void executeEOR ();
 
@@ -114,7 +121,10 @@ private:
     reg* opperand2;
     reg* opperand3;
 
+    reg* pc;
+
     // Non-register arguments
+    uint32_t NR_operand1;
     uint32_t NR_operand2;                   // Not Register Opperand
     uint32_t NR_operand3;
 
