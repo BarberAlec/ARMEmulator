@@ -13,9 +13,9 @@
  *  > Implement PC accurately                                                           X
  *  > implement basic B branchs and labels                                              X
  *  > implement non register memory and insturctions to access it
- *  > condition flags
+ *  > condition flags                                                                   X
  *  > s feature on instructions so as to update flags
- *  > CMP (finally)
+ *  > CMP (finally)                                                                     X
  *  
  * 
  **/

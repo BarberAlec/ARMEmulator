@@ -438,7 +438,6 @@ void instruction::executeB (){
 }
 
 void instruction::executeCMP (){
-    std::cout << "got into cmp" << std::endl;
     if (numberOperands == 2){
         if (opperand1 != NULL){
             uint32_t temp;
@@ -508,7 +507,7 @@ void instruction::executeCMP (){
                 (*cond_flags) = (*cond_flags) | 0b00000100;             // Set Z flag to high
             }
             else{
-                (*cond_flags) = (*cond_flags) & 0b11110111;             // Set Z flag to low
+                (*cond_flags) = (*cond_flags) & 0b11111011;             // Set Z flag to low
             }
         }
         else{
