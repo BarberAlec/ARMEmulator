@@ -2,7 +2,6 @@
 /**
  * TODO:
  * > Make loadSourceFile more readable and less abhorent.... that thing is disgusting....
- * > Fix bug where labels cannot start with S P or L
  **/
 
 ARMFile::ARMFile(){
@@ -55,6 +54,8 @@ void ARMFile::closeSourceFile (){
 }
 
 void ARMFile::printRegistersBits (){
+
+    std::cout << std::endl << "CPSR: " << std::bitset<4> (condFlags) << std::endl;
     std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
 
     std::cout << "|               r0               |               r1               |               r2               |               r3               |" << std::endl;
@@ -86,7 +87,7 @@ void ARMFile::printRegistersBits (){
 
 void ARMFile::printRegistersHex (){
     std::cout  << std::setfill('0');
-
+    std::cout << std::endl << "CPSR: " << std::bitset<4> (condFlags) << std::endl;
     std::cout << "_____________________________________________" << std::endl;
 
     std::cout << "|    r0    |    r1    |    r2    |    r3    |" << std::endl;
@@ -209,6 +210,7 @@ void ARMFile::loadSourceFile (){
         if (index == (curr_line.size () - 1)){
             instruction x(command, arg1_int);
             x.setPCPointer (&PC);
+            x.setCondFlags (&condFlags);
             instructionVect.push_back (x);
             continue;
         }
@@ -244,6 +246,7 @@ void ARMFile::loadSourceFile (){
                     arg3_point = string2Reg (arg3);
                     instruction x(command, arg1_point, arg2_point, arg3_point);
                     x.setPCPointer (&PC);
+                    x.setCondFlags (&condFlags);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -252,6 +255,7 @@ void ARMFile::loadSourceFile (){
 
                     instruction x(command, arg1_point, arg2_point, arg3_int);
                     x.setPCPointer (&PC);
+                    x.setCondFlags (&condFlags);
                     instructionVect.push_back (x);
                 }
             }
@@ -265,6 +269,7 @@ void ARMFile::loadSourceFile (){
 
                     instruction x(command, arg1_point, arg2_int, arg3_point);
                     x.setPCPointer (&PC);
+                    x.setCondFlags (&condFlags);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -273,6 +278,7 @@ void ARMFile::loadSourceFile (){
 
                     instruction x(command, arg1_point, arg2_int, arg3_int);
                     x.setPCPointer (&PC);
+                    x.setCondFlags (&condFlags);
                     instructionVect.push_back (x);
                 }
             }
@@ -287,6 +293,7 @@ void ARMFile::loadSourceFile (){
 
                 instruction x(command, arg1_point, arg2_point);
                 x.setPCPointer (&PC);
+                x.setCondFlags (&condFlags);
                 instructionVect.push_back (x);
             }
             else{
@@ -294,6 +301,7 @@ void ARMFile::loadSourceFile (){
                 arg2_int = string2Num (arg2);
                 instruction x(command, arg1_point, arg2_int);
                 x.setPCPointer (&PC);
+                x.setCondFlags (&condFlags);
                 instructionVect.push_back (x);
             }
         }

@@ -333,6 +333,10 @@ void instruction::execute (){
             executeB ();
             break;
 
+        case CMP:
+            executeCMP ();
+            break;
+
         case EOR:
             executeEOR ();
             break;
@@ -351,12 +355,6 @@ void instruction::execute (){
 
         case SUB:
             executeSUB ();
-            break;
-
-        case CMP:
-
-            std::cout << "Sorry CMP has not yet been implemented... " << std::endl;
-
             break;
         default:
             std::cout << "This Operator is not recognised or has not been implemented yet >> " << Operat << " <<" << std::endl;
@@ -436,6 +434,89 @@ void instruction::executeB (){
     }  
     else{
         std::cout << "ERROR: B can only have one argument..." << std::endl;
+    }
+}
+
+void instruction::executeCMP (){
+    std::cout << "got into cmp" << std::endl;
+    if (numberOperands == 2){
+        if (opperand1 != NULL){
+            uint32_t temp;
+            if (opperand2 == NULL){
+                temp = opperand1->getMem () - NR_operand2;
+
+                // TEST FOR CARRY
+                if (opperand1->getMem () >= NR_operand2){               // **unsigned comparison**
+                    // No carry
+                    (*cond_flags) = (*cond_flags) & 0b11111101;         // Set C flag to low
+                }
+                else{
+                    // There is a carry
+                    (*cond_flags) = (*cond_flags) | 0b00000010;         // Set C flag to high
+                }
+
+                // TEST FOR OVERFLOW
+                if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((0x80000000 & NR_operand2) == 0x0))  ||
+                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((0x80000000 & NR_operand2) != 0x0))){
+                    // signs of arguments differ
+                    if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((temp & 0x80000000) == 0x0)) || 
+                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((temp & 0x80000000) != 0x0))){
+                        (*cond_flags) = (*cond_flags) | 0b00000001;     // Set V flag to high
+                    }
+                    else{
+                        (*cond_flags) = (*cond_flags) & 0b11111110;     // Set V flag to low
+                    }  
+                }
+            }
+            else{
+                temp = opperand1->getMem () - opperand2->getMem ();
+
+                // TEST FOR CARRY
+                if (opperand1->getMem () >= opperand2->getMem ()){               // **unsigned comparison**
+                    // No carry
+                    (*cond_flags) = (*cond_flags) & 0b11111101;         // Set C flag to low
+                }
+                else{
+                    // There is a carry
+                    (*cond_flags) = (*cond_flags) | 0b00000010;         // Set C flag to high
+                }
+
+                // TEST FOR OVERFLOW
+                if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((0x80000000 & opperand2->getMem ()) == 0x0))  ||
+                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((0x80000000 & opperand2->getMem ()) != 0x0))){
+                    // signs of arguments differ
+                    if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((temp & 0x80000000) == 0x0)) || 
+                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((temp & 0x80000000) != 0x0))){
+                        (*cond_flags) = (*cond_flags) | 0b00000001;     // Set V flag to high
+                    }
+                    else{
+                        (*cond_flags) = (*cond_flags) & 0b11111110;     // Set V flag to low
+                    }  
+                }
+            }
+
+            // TEST FOR NEGITIVITY
+            if ((0x80000000 & temp) != 0x00000000){
+                (*cond_flags) = (*cond_flags) | 0b00001000;             // Set N flag to high
+            }
+            else{
+                (*cond_flags) = (*cond_flags) & 0b11110111;             // Set N flag to low
+            }
+
+            // TEST FOR ZERO...NESS
+            if (temp == 0x00000000){
+                (*cond_flags) = (*cond_flags) | 0b00000100;             // Set Z flag to high
+            }
+            else{
+                (*cond_flags) = (*cond_flags) & 0b11110111;             // Set Z flag to low
+            }
+        }
+        else{
+            std::cout << "ERROR: CMP requires first argument to be a register." << std::endl;
+        }
+    }
+    else{
+        std::cout << "ERROR: CMP requires exactly 2 arguments." << std::endl;
     }
 }
 

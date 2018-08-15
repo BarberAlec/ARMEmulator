@@ -11,8 +11,11 @@
  *  > Implement add on bit at end of instruction (like roate shift etc.)
  *  > Implement Comments with ;
  *  > Implement PC accurately                                                           X
- *  > implement basic B branchs and labels
+ *  > implement basic B branchs and labels                                              X
  *  > implement non register memory and insturctions to access it
+ *  > condition flags
+ *  > s feature on instructions so as to update flags
+ *  > CMP (finally)
  *  
  * 
  **/

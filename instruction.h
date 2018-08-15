@@ -33,6 +33,8 @@ public:
 
     instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3);
 
+    
+
     enum enum_operats{
         // X designates that it has been implemented
         UNDEFINED,
@@ -100,6 +102,8 @@ private:
 
     void executeB ();
 
+    void executeCMP ();
+
     void executeEOR ();
 
     void executeMOV ();
@@ -121,19 +125,20 @@ private:
     reg* opperand2;
     reg* opperand3;
 
+    // Pointer to PC register (needed for branching)
     reg* pc;
 
     // Non-register arguments
     uint32_t NR_operand1;
-    uint32_t NR_operand2;                   // Not Register Opperand
+    uint32_t NR_operand2;                   // Not Register Opperands
     uint32_t NR_operand3;
+
+    // Pointer to cond flags which are owned by ARM-file
+    uint8_t *cond_flags;
 
     // instruction and opperands coverted into a 32 bit instruction
     uint32_t machineInstruction;
 
+    // Has MachineCode been generated yet
     bool machineCodeGenerated;
-
-    uint8_t *cond_flags;
-
-
 };
