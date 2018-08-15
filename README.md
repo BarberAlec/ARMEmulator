@@ -3,7 +3,11 @@ The ARM Interpreter.\n
 
 Current Features Include:\n
 
- > Basic instructions such as ADD AND and EOR !!\n
- > Labels and Branching with B\n
+ - [X] Basic instructions such as ADD AND and EOR !!
+ 
+ - [X] Labels and Branching with B
 
-New up and coming features include condition flags and conditional branching!!
+New up and coming features include:\n
+ - [] condition flags
+ 
+ - [] conditional branching!!
