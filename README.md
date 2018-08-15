@@ -8,6 +8,6 @@ Current Features Include:\n
  - [X] Labels and Branching with B
 
 New up and coming features include:\n
- - [] condition flags
+ - [ ] condition flags
  
- - [] conditional branching!!
+ - [ ] conditional branching!!
