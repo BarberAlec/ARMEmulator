@@ -1,7 +1,7 @@
 # ARMEmulator
 **The ARM Interpreter.**
 
-The ARMEmulator is an interpreter for the ARM instruction set. Devlopment for this project started MOnday the 13th of Augest. At this early stage, there are key features which have not as of yet been implemented, asides this, there are still many bugs in the program. If you do find any bugs, please contact me at arberal@tcd.ie.
+The ARMEmulator is an interpreter for the ARM instruction set. Devlopment for this project started on Monday the 13th of Augest. At this early stage, there are key features which have not as of yet been implemented, asides this, there are still many bugs in the program. If you do find any bugs, please contact me at barberal@tcd.ie.
 
 Instructions:
 
@@ -38,7 +38,7 @@ Features:
 
  - [X] s feature (MOVS etc.)
 
- - [ ] character support
+ - [X] character support
 
  - [ ] General robustness...
 

@@ -436,6 +436,14 @@ uint32_t ARMFile::string2Num (std::string N){
         num_val = N.substr (1, N.size () - 1);
         return stoi (num_val);
     }
+    else if (N.at (0) == '\''){
+        // character
+        if (N.size () != 3){
+            std::cout << "FATAL_ERROR: characters must have two \' and one letter inbetween" << std::endl;
+            exit (-1);
+        }
+        return (uint32_t)N.at (1);
+    }
     else{  
         if (labels.count (N) > 0){
             // label exists
