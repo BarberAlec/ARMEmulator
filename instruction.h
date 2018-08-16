@@ -74,6 +74,26 @@ public:
         TST
     };
 
+    enum enum_condition_code{
+        UNDEFINED_C,
+        NO_COND_CODE,
+        EQ,
+        NE,
+        CS,
+        CC,
+        MI,
+        PL,
+        VS,
+        VC,
+        HI,
+        LS,
+        GE,
+        LT,
+        GT,
+        LE,
+        AL
+    };
+
     // Get Machine code 32 bit instruction
     uint32_t getMachineInstruction ();
 
@@ -93,6 +113,13 @@ public:
 private:
     // To be implemented soon !!!!!
     void generateMachineInstruction ();
+
+
+    // Returns true if string contains a S to designate flag updates
+    bool updateFlags (std::string instruc, int command_length);
+
+    //  returns condition code 
+    enum_condition_code getCondCode (std::string instruc, int command_length);
 
 
     // Helper functions for execute () to keep code clean and maintainable
@@ -135,6 +162,11 @@ private:
 
     // Pointer to cond flags which are owned by ARM-file
     uint8_t *cond_flags;
+
+    // Should cond_flags be updated with this instruction (i.e. is s present)
+    bool update_flag;
+
+    enum_condition_code cond_code;
 
     // instruction and opperands coverted into a 32 bit instruction
     uint32_t machineInstruction;

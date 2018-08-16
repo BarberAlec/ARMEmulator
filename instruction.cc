@@ -16,9 +16,10 @@ instruction::instruction (){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
-    Operat = UNDEFINED;
+    Operat = enum_operats::UNDEFINED;
 
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1){
@@ -40,6 +41,7 @@ instruction::instruction (std::string command, reg* ar1){
     Operat = string2Operats (command);
 
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, uint32_t ar1){
@@ -61,6 +63,7 @@ instruction::instruction (std::string command, uint32_t ar1){
     Operat = string2Operats (command);
 
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2){
@@ -82,6 +85,7 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2){
     Operat = string2Operats (command);
 
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, uint32_t ar2){
@@ -103,6 +107,7 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2){
     Operat = string2Operats (command);
     
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
@@ -124,6 +129,7 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
     Operat = string2Operats (command);
 
     cond_flags = NULL;
+    update_flag = false;
 }
 
 
@@ -146,6 +152,7 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, uint32_t 
     Operat = string2Operats (command);
     
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3){
@@ -167,6 +174,7 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3)
     Operat = string2Operats (command);
     
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3){
@@ -188,113 +196,255 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3)
     Operat = string2Operats (command);
     
     cond_flags = NULL;
+    update_flag = false;
 }
 
 instruction::enum_operats instruction::string2Operats (std::string input){
-    if (input.compare("ADC") == 0){
+
+    std::string input_3 = input.substr (0,3);
+    std::string input_2 = input.substr (0,2);
+    std::string input_1 = input.substr (0,1);
+
+    if (input_3.compare("ADC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return ADC;
     }
-    else if (input.compare("ADD") == 0){
+    else if (input_3.compare("ADD") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return ADD;
     }
-    else if (input.compare("AND") == 0){
+    else if (input_3.compare("AND") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return AND;
     }
-    else if (input.compare("B") == 0){
+    else if (input_1.compare("B") == 0){
+        if (updateFlags (input, 1)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 1);
         return B;
     }
-    else if (input.compare("BIC") == 0){
+    else if (input_3.compare("BIC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return BIC;
     }
-    else if (input.compare("BL") == 0){
+    else if (input_2.compare("BL") == 0){
+        if (updateFlags (input, 2)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 2);
         return BL;
     }
-    else if (input.compare("BX") == 0){
+    else if (input_2.compare("BX") == 0){
+        if (updateFlags (input, 2)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 2);
         return BX;
     }
-    else if (input.compare("CDP") == 0){
+    else if (input_3.compare("CDP") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return CDP;
     }
-    else if (input.compare("CMN") == 0){
+    else if (input_3.compare("CMN") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return CMN;
     }
-    else if (input.compare ("CMP") == 0){
+    else if (input_3.compare ("CMP") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return CMP;
     }
-    else if (input.compare("EOR") == 0){
+    else if (input_3.compare("EOR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return EOR;
     }
-    else if (input.compare ("LDC") == 0){
+    else if (input_3.compare ("LDC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return LDC;
     }
-    else if (input.compare ("LDM") == 0){
+    else if (input_3.compare ("LDM") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return LDM;
     }
-    else if (input.compare ("LDR") == 0){
+    else if (input_3.compare ("LDR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return LDR;
     }
-    else if (input.compare ("MCR") == 0){
+    else if (input_3.compare ("MCR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MCR;
     }
-    else if (input.compare ("MLA") == 0){
+    else if (input_3.compare ("MLA") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MLA;
     }
-    else if (input.compare("MOV") == 0){
+    else if (input_3.compare("MOV") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MOV;
     }
-    else if (input.compare ("MRC") == 0){
+    else if (input_3.compare ("MRC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MRC;
     }
-    else if (input.compare ("MRS") == 0){
+    else if (input_3.compare ("MRS") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MRS;
     }
-    else if (input.compare ("MSR") == 0){
+    else if (input_3.compare ("MSR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MSR;
     }
-    else if (input.compare("MUL") == 0){
+    else if (input_3.compare("MUL") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MUL;
     }
-    else if (input.compare ("MVN") == 0){
+    else if (input_3.compare ("MVN") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return MVN;
     }
-    else if (input.compare("ORR") == 0){
+    else if (input_3.compare("ORR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return ORR;
     }
-    else if (input.compare ("RSB") == 0){
+    else if (input_3.compare ("RSB") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return RSB;
     }
-    else if (input.compare ("RSC") == 0){
+    else if (input_3.compare ("RSC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return RSC;
     }
-    else if (input.compare ("SBC") == 0){
+    else if (input_3.compare ("SBC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return SBC;
     }
-    else if (input.compare ("STC") == 0){
+    else if (input_3.compare ("STC") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return STC;
     }
-    else if (input.compare ("STM") == 0){
+    else if (input_3.compare ("STM") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return STM;
     }
-    else if (input.compare ("STR") == 0){
+    else if (input_3.compare ("STR") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return STR;
     }
-    else if (input.compare("SUB") == 0){
+    else if (input_3.compare("SUB") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return SUB;
     }
-    else if (input.compare ("SWI") == 0){
+    else if (input_3.compare ("SWI") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return SWI;
     }
-    else if (input.compare ("SWP") == 0){
+    else if (input_3.compare ("SWP") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return SWP;
     }
-    else if (input.compare ("TEQ") == 0){
+    else if (input_3.compare ("TEQ") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return TEQ;
     }
-    else if (input.compare ("TST") == 0){
+    else if (input_3.compare ("TST") == 0){
+        if (updateFlags (input, 3)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 3);
         return TST;
     }
     else{
-        return UNDEFINED;
+        return enum_operats::UNDEFINED;
     }
 }
 
@@ -373,6 +523,85 @@ void instruction::printInstructionInfo (){
     std::cout << "NR_operand1: " << NR_operand1 << std::endl;
     std::cout << "NR_operand2: " << NR_operand2 << std::endl;
     std::cout << "NR_operand3: " << NR_operand3 << std::endl;
+}
+
+bool instruction::updateFlags (std::string instruc, int command_length){
+    if (instruc.size () == command_length){
+        return false;
+    }
+    if (instruc.at (instruc.size () - 1) == 'S' || instruc.at (instruc.size () - 1) == 's'){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+instruction::enum_condition_code instruction::getCondCode (std::string instruc, int command_length){
+    if (instruc.size () == command_length){
+        return NO_COND_CODE;
+    }
+
+    std::string addon = instruc.substr (command_length, instruc.size () - command_length);
+    // Remove S if present
+    if (addon.at (addon.size () - 1) == 's' || addon.at (addon.size () - 1) == 'S'){
+        addon = addon.substr (0, addon.size () - 1);
+    }
+    if (addon.size () == 0){
+        return NO_COND_CODE;
+    }
+
+
+    if (addon.compare ("EQ") == 0){
+        return EQ;
+    }
+    else if (addon.compare ("NE") == 0){
+        return NE;
+    }
+    else if (addon.compare ("CS") == 0){
+        return CS;
+    }
+    else if (addon.compare ("CC") == 0){
+        return CC;
+    }
+    else if (addon.compare ("MI") == 0){
+        return MI;
+    }
+    else if (addon.compare ("PL") == 0){
+        return PL;
+    }
+    else if (addon.compare ("VS") == 0){
+        return VS;
+    }
+    else if (addon.compare ("VC") == 0){
+        return VC;
+    }
+    else if (addon.compare ("HI") == 0){
+        return HI;
+    }
+    else if (addon.compare ("LS") == 0){
+        return LS;
+    }
+    else if (addon.compare ("GE") == 0){
+        return GE;
+    }
+    else if (addon.compare ("LT") == 0){
+        return LT;
+    }
+    else if (addon.compare ("GT") == 0){
+        return GT;
+    }
+    else if (addon.compare ("LE") == 0){
+        return LE;
+    }
+    else if (addon.compare ("AL") == 0){
+        return AL;
+    }
+    else{
+        return UNDEFINED_C;
+    }
+
+
 }
 
 void instruction::executeADD (){
