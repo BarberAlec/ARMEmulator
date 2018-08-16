@@ -1,7 +1,7 @@
 # ARMEmulator
 **The ARM Interpreter.**
 
-The ARMEmulator is an interpreter for the ARM instruction set.
+The ARMEmulator is an interpreter for the ARM instruction set. Devlopment for this project started MOnday the 13th of Augest. At this early stage, there are key features which have not as of yet been implemented, asides this, there are still many bugs in the program. If you do find any bugs, please contact me at arberal@tcd.ie.
 
 Instructions:
 
@@ -17,13 +17,13 @@ Instructions:
 
 -To compile the Interpreter, go to the working directory in terminal and execute the following command:
 
-> g++ ARM-file.cc instruction.cc register.cc emulator.cc
+> make
 
 -To run your program, while still in the working directory in terminal, execute the following command:
 
->./a.out
+>./armulate
 
--If you encounter any bugs please let me know at barberal@tcd.ie
+-Enjoy!!
 
 
 Features: 
@@ -42,7 +42,7 @@ Features:
 
  - [ ] General robustness...
 
- - [ ] An actual Make File
+ - [X] An actual Make File
 
  - [ ] Passable UI
 

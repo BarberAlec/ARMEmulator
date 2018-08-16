@@ -136,7 +136,7 @@ void ARMFile::loadSourceFile (){
     
 
     char charHelper;
-    int index;
+    uint32_t index;
 
     std::string curr_line;
 
@@ -321,7 +321,7 @@ void ARMFile::firstPassLoadSourceFile (){
         if (curr_line.at (0) != '\t'){
             // We have ourselves a Label!! 
             char charHelper;
-            int index = -1;
+            uint32_t index = -1;
             std::string lb = "";
             charHelper = curr_line.at (++index);
             while (charHelper != ' ' && index != (curr_line.size () - 1)){
@@ -437,17 +437,15 @@ uint32_t ARMFile::string2Num (std::string N){
         return stoi (num_val);
     }
     else{  
-        //std::cout << "0" << std::endl;
         if (labels.count (N) > 0){
-            //std::cout << "1" << std::endl;
             // label exists
             std::map<std::string,uint32_t>::iterator iter = labels.find (N);
-            //std::cout << "2" << std::endl;
             return iter->second;
         }
         else{
             //not a predefined label
-            std::cout << "ERROR: in ARMFile::string2Num, unknown Number type: " << N << std::endl;
+            std::cout << "FATAL_ERROR: in ARMFile::string2Num, unknown Number type: " << N << std::endl;
+            exit (-1);
         }
     }
 }
