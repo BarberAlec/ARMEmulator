@@ -1,5 +1,10 @@
 #include "instruction.h"
 
+
+/************************************************************************
+*                  Instruction Constructors                             *
+*************************************************************************/
+
 instruction::instruction (){
     opperand1 = NULL;
     opperand2 = NULL;
@@ -38,10 +43,10 @@ instruction::instruction (std::string command, reg* ar1){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
 
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::instruction (std::string command, uint32_t ar1){
@@ -60,10 +65,10 @@ instruction::instruction (std::string command, uint32_t ar1){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
 
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2){
@@ -82,10 +87,10 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
 
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, uint32_t ar2){
@@ -104,10 +109,9 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
-    Operat = string2Operats (command);
-    
-    cond_flags = NULL;
     update_flag = false;
+    Operat = string2Operats (command);
+    cond_flags = NULL;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
@@ -126,10 +130,10 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
 
     cond_flags = NULL;
-    update_flag = false;
 }
 
 
@@ -149,10 +153,10 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, uint32_t 
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
     
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3){
@@ -171,10 +175,10 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, uint32_t ar3)
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
     
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3){
@@ -193,10 +197,10 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3)
     machineInstruction = 0;
     machineCodeGenerated = false;
 
+    update_flag = false;
     Operat = string2Operats (command);
     
     cond_flags = NULL;
-    update_flag = false;
 }
 
 instruction::enum_operats instruction::string2Operats (std::string input){
@@ -468,7 +472,9 @@ void instruction::setPCPointer (reg* p){
 }
 
 void instruction::execute (){
-
+    if (!executePermission ()){
+        return;
+    }
 
     switch (Operat){
         case ADD:
@@ -604,6 +610,84 @@ instruction::enum_condition_code instruction::getCondCode (std::string instruc, 
 
 }
 
+bool instruction::executePermission (){
+    switch (cond_code){
+        case UNDEFINED_C:
+            std::cout << "ERROR: cond_code = UNDEFINED_C" << std::endl;
+            return true;
+        case NO_COND_CODE:
+            return true;
+        case EQ:
+            if (((*cond_flags) & 0b00000100) != 0x0) return true;
+            return false;
+        case NE:
+            if (((*cond_flags) & 0b00000100) == 0x0) return true;
+            return false;
+        case CS:
+            if (((*cond_flags) & 0b00000010) != 0x0) return true;
+            return false;
+        case CC:
+            if (((*cond_flags) & 0b00000010) == 0x0) return true;
+            return false;
+        case MI:
+            if (((*cond_flags) & 0b00001000) != 0x0) return true;
+            return false;
+        case PL:
+            if (((*cond_flags) & 0b00001000) == 0x0) return true;
+            return false;
+        case VS:
+            if (((*cond_flags) & 0b00000001) != 0x0) return true;
+            return false;
+        case VC:
+            if (((*cond_flags) & 0b00000001) == 0x0) return true;
+            return false;
+        case HI:
+            if ((((*cond_flags) & 0b00000100) == 0x0) && (((*cond_flags) & 0b00000010) != 0x0)) return true;
+            return false;
+        case LS:
+            if ((((*cond_flags) & 0b00000100) != 0x0) && (((*cond_flags) & 0b00000010) == 0x0)) return true;
+            return false;
+        case GE:
+            if ((((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) != 0x0) ||
+                                 (((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) == 0x0)) return true;
+            return false;
+        case LT:
+            if ((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) != 0x0) ||
+                                 (((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) == 0x0)) return true;
+            return false;
+        case GT:
+            if (((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) == 0x0) ||
+                                 (((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) != 0x0)) && ((((*cond_flags) & 0b00000100) == 0x0))) return true;
+            return false;
+        case LE:
+            if (((((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) == 0x0) ||
+                                 (((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) != 0x0)) && ((((*cond_flags) & 0b00000100) != 0x0))) return true;
+            return false;
+        case AL:
+            return true;
+            break;
+        default:
+            std::cout << "ERROR: executePermission could not find cond_code" << std::endl;
+            return true;
+    }
+}
+
+void instruction::updateNegZero (){
+    if (update_flag){
+        if ((opperand1->getMem () & 0x80000000) != 0x0) ((*cond_flags) = ((*cond_flags) | 0b00001000));
+        else (*cond_flags) = ((*cond_flags) & 0b11110111);
+
+        if (opperand1->getMem () == 0x0) ((*cond_flags) = ((*cond_flags) | 0b00000100));
+        else ((*cond_flags) & 0b11111011);
+    }
+}
+
+
+
+/************************************************************************
+*                  Execution Helper Functions                           *
+*************************************************************************/
+
 void instruction::executeADD (){
     if (numberOperands == 2){
         if (opperand2 == NULL){
@@ -631,6 +715,8 @@ void instruction::executeADD (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeAND (){
@@ -655,6 +741,8 @@ void instruction::executeAND (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeB (){
@@ -770,6 +858,8 @@ void instruction::executeEOR (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeMOV (){
@@ -784,6 +874,8 @@ void instruction::executeMOV (){
     else{
         std::cout << "Error: MOV only support two operands at the moment..." << std::endl;
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeMUL (){
@@ -809,6 +901,8 @@ void instruction::executeMUL (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeORR (){
@@ -833,6 +927,8 @@ void instruction::executeORR (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeSUB (){
@@ -862,4 +958,6 @@ void instruction::executeSUB (){
             }
         }
     }
+    // update N and Z flags
+    updateNegZero ();
 }

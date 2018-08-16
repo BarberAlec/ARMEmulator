@@ -121,6 +121,11 @@ private:
     //  returns condition code 
     enum_condition_code getCondCode (std::string instruc, int command_length);
 
+    // check if there is any conditions to execution (condition codes (EQ etc.))
+    bool executePermission ();
+
+    // helper function that updates N and Z flags when called
+    void updateNegZero ();
 
     // Helper functions for execute () to keep code clean and maintainable
     void executeADD ();
@@ -147,6 +152,8 @@ private:
     // MOV, SUB etc.
     enum_operats Operat;
 
+    enum_condition_code cond_code;
+
     // Register arguments
     reg* opperand1;
     reg* opperand2;
@@ -165,8 +172,6 @@ private:
 
     // Should cond_flags be updated with this instruction (i.e. is s present)
     bool update_flag;
-
-    enum_condition_code cond_code;
 
     // instruction and opperands coverted into a 32 bit instruction
     uint32_t machineInstruction;
