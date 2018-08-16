@@ -13,7 +13,7 @@ Instructions:
 
 -For labels, begin the label without a tab and seperate the end of the label from the main instruction (if any) by a single space.
 
--Do not have any empyty lines
+-Do not have any empty lines
 
 -To compile the Interpreter, go to the working directory in terminal and execute the following command:
 

@@ -170,8 +170,13 @@ void ARMFile::loadSourceFile (){
             // Label present!
 
             // skip label
-            while (charHelper != ' '){
+            while (charHelper != ' ' && index != (curr_line.size () - 1)){
                 charHelper = curr_line.at (++index);
+            }
+            
+            //if no instruction after label
+            if (index == (curr_line.size () - 1)){
+                continue;
             }
 
             charHelper = curr_line.at (++index);
@@ -318,11 +323,13 @@ void ARMFile::firstPassLoadSourceFile (){
             char charHelper;
             int index = -1;
             std::string lb = "";
-
             charHelper = curr_line.at (++index);
-            while (charHelper != ' '){
+            while (charHelper != ' ' && index != (curr_line.size () - 1)){
                 lb += charHelper;
                 charHelper = curr_line.at (++index);
+            }
+            if (index == (curr_line.size () - 1)){
+                lb += charHelper;
             }
             labels[lb] = 0xA0000000 + 8*line_count;
 

@@ -14,7 +14,7 @@
  *  > implement basic B branchs and labels                                              X
  *  > implement non register memory and insturctions to access it
  *  > condition flags                                                                   X
- *  > s feature on instructions so as to update flags
+ *  > s feature on instructions so as to update flags                                   X
  *  > CMP (finally)                                                                     X
  *  
  * 
