@@ -452,6 +452,12 @@ instruction::enum_operats instruction::string2Operats (std::string input){
     }
 }
 
+
+
+/************************************************************************
+*                  MISC/ General		                                *
+*************************************************************************/
+
 uint32_t instruction::getMachineInstruction (){
     if (!machineCodeGenerated){
         machineCodeGenerated = true;
@@ -648,12 +654,12 @@ bool instruction::executePermission (){
             if ((((*cond_flags) & 0b00000100) != 0x0) && (((*cond_flags) & 0b00000010) == 0x0)) return true;
             return false;
         case GE:
-            if ((((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) != 0x0) ||
-                                 (((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) == 0x0)) return true;
+            if (((((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) != 0x0)) ||
+                                 ((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) == 0x0))) return true;
             return false;
         case LT:
-            if ((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) != 0x0) ||
-                                 (((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) == 0x0)) return true;
+            if (((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) != 0x0)) ||
+                                 ((((*cond_flags) & 0b00001000) != 0x0) && (((*cond_flags) & 0b00000001) == 0x0))) return true;
             return false;
         case GT:
             if (((((*cond_flags) & 0b00001000) == 0x0) && (((*cond_flags) & 0b00000001) == 0x0) ||
@@ -682,6 +688,63 @@ void instruction::updateNegZero (){
     }
 }
 
+
+
+/************************************************************************
+*                  Helper funcions to modify flags                      *
+*************************************************************************/
+
+void instruction::set_N_High (){
+	(*cond_flags) = (*cond_flags) | 0b00001000;
+}
+
+void instruction::set_N_Low (){
+	(*cond_flags) = (*cond_flags) & 0b11110111;
+}
+
+void instruction::set_Z_High (){
+	(*cond_flags) = (*cond_flags) | 0b00000100;
+}
+
+void instruction::set_Z_Low (){
+	(*cond_flags) = (*cond_flags) & 0b11111011;
+}
+
+void instruction::set_C_High (){
+	(*cond_flags) = (*cond_flags) | 0b00000010;
+}
+
+void instruction::set_C_Low (){
+	(*cond_flags) = (*cond_flags) & 0b11111101;
+}
+
+void instruction::set_V_High (){
+	(*cond_flags) = (*cond_flags) | 0b00000001;
+}
+
+void instruction::set_V_Low (){
+	(*cond_flags) = (*cond_flags) & 0b11111110;
+}
+
+
+
+/************************************************************************
+*             Helper functions to test uint32_t traits                  *
+*************************************************************************/
+
+bool instruction::isNeg (uint32_t num){
+	if ((0x80000000 & num) != 0x0){
+		return true;
+	}
+	return false;
+}
+
+bool instruction::isDiffSigns (uint32_t num1, uint32_t num2){
+	if ((isNeg (num1) && !isNeg (num2)) || (!isNeg (num1) && isNeg (num2))){
+		return true;
+	}
+	return false;
+}
 
 
 /************************************************************************
@@ -762,25 +825,21 @@ void instruction::executeCMP (){
                 temp = opperand1->getMem () - NR_operand2;
 
                 // TEST FOR CARRY
-                if (opperand1->getMem () >= NR_operand2){               // **unsigned comparison**
-                    // No carry
-                    (*cond_flags) = (*cond_flags) & 0b11111101;         // Set C flag to low
+                if (opperand1->getMem () >= NR_operand2){		// **unsigned comparison**
+                    set_C_Low ();
                 }
                 else{
-                    // There is a carry
-                    (*cond_flags) = (*cond_flags) | 0b00000010;         // Set C flag to high
+                    set_C_High ();
                 }
 
                 // TEST FOR OVERFLOW
-                if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((0x80000000 & NR_operand2) == 0x0))  ||
-                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((0x80000000 & NR_operand2) != 0x0))){
+                if (isDiffSigns (opperand1->getMem (), NR_operand2)){
                     // signs of arguments differ
-                    if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((temp & 0x80000000) == 0x0)) || 
-                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((temp & 0x80000000) != 0x0))){
-                        (*cond_flags) = (*cond_flags) | 0b00000001;     // Set V flag to high
+                    if (isDiffSigns (opperand1->getMem (), temp)){
+                        set_V_High ();
                     }
                     else{
-                        (*cond_flags) = (*cond_flags) & 0b11111110;     // Set V flag to low
+                        set_V_Low ();
                     }  
                 }
             }
@@ -789,42 +848,38 @@ void instruction::executeCMP (){
 
                 // TEST FOR CARRY
                 if (opperand1->getMem () >= opperand2->getMem ()){               // **unsigned comparison**
-                    // No carry
-                    (*cond_flags) = (*cond_flags) & 0b11111101;         // Set C flag to low
+                    set_C_Low ();
                 }
                 else{
-                    // There is a carry
-                    (*cond_flags) = (*cond_flags) | 0b00000010;         // Set C flag to high
+                    set_C_High ();
                 }
 
                 // TEST FOR OVERFLOW
-                if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((0x80000000 & opperand2->getMem ()) == 0x0))  ||
-                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((0x80000000 & opperand2->getMem ()) != 0x0))){
+                if (isDiffSigns (opperand1->getMem (), opperand2->getMem ())){
                     // signs of arguments differ
-                    if ((((0x80000000 & opperand1->getMem ()) != 0x0) && ((temp & 0x80000000) == 0x0)) || 
-                                                    (((0x80000000 & opperand1->getMem ()) == 0x0) && ((temp & 0x80000000) != 0x0))){
-                        (*cond_flags) = (*cond_flags) | 0b00000001;     // Set V flag to high
+                    if (isDiffSigns (opperand1->getMem (), temp)){
+                        set_V_High ();
                     }
                     else{
-                        (*cond_flags) = (*cond_flags) & 0b11111110;     // Set V flag to low
+                        set_V_Low ();
                     }  
                 }
             }
 
             // TEST FOR NEGITIVITY
-            if ((0x80000000 & temp) != 0x00000000){
-                (*cond_flags) = (*cond_flags) | 0b00001000;             // Set N flag to high
+            if (isNeg (temp)){
+                set_N_High ();
             }
             else{
-                (*cond_flags) = (*cond_flags) & 0b11110111;             // Set N flag to low
+                set_N_Low ();
             }
 
             // TEST FOR ZERO...NESS
             if (temp == 0x00000000){
-                (*cond_flags) = (*cond_flags) | 0b00000100;             // Set Z flag to high
+                set_Z_High ();
             }
             else{
-                (*cond_flags) = (*cond_flags) & 0b11111011;             // Set Z flag to low
+                set_Z_Low ();
             }
         }
         else{
@@ -934,9 +989,43 @@ void instruction::executeORR (){
 void instruction::executeSUB (){
     if (numberOperands == 2){
         if (opperand2 == NULL){
+            uint32_t temp = opperand1->getMem () - NR_operand2;
+            if (update_flag){
+                // test carry
+                if (opperand1->getMem () >= NR_operand2) set_C_Low ();
+                else set_C_High ();
+
+                // test overflow
+                if (isDiffSigns (opperand1->getMem (), NR_operand2)){
+                    // signs of arguments differ
+                    if (isDiffSigns (opperand1->getMem (), temp)){
+                        set_V_High ();
+                    }
+                    else{
+                        set_V_Low ();
+                    } 
+                }
+            }
             opperand1->setMem (opperand1->getMem () - NR_operand2);
         }
         else{
+            uint32_t temp = opperand1->getMem () - opperand2->getMem ();
+            if (update_flag){
+                // test carry
+                if (opperand1->getMem () >= opperand2->getMem ()) set_C_Low ();
+                else set_C_High ();
+
+                // test overflow
+                if (isDiffSigns (opperand1->getMem (), opperand2->getMem ())){
+                    // signs of arguments differ
+                    if (isDiffSigns (opperand1->getMem (), temp)){
+                        set_V_High ();
+                    }
+                    else{
+                        set_V_Low ();
+                    } 
+                }
+            }
             opperand1->setMem (opperand1->getMem () - opperand2->getMem ());
         }
     }

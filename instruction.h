@@ -127,23 +127,31 @@ private:
     // helper function that updates N and Z flags when called
     void updateNegZero ();
 
+
+
+    //Helper funcions to modify flags
+    void set_N_High ();
+    void set_N_Low ();
+    void set_Z_High ();
+    void set_Z_Low ();
+    void set_C_High ();
+    void set_C_Low ();
+    void set_V_High ();
+    void set_V_Low ();
+
+    // Helper functions to test uint32_t traits
+    bool isNeg (uint32_t num);
+    bool isDiffSigns (uint32_t num1, uint32_t num2);
+
     // Helper functions for execute () to keep code clean and maintainable
     void executeADD ();
-
     void executeAND ();
-
     void executeB ();
-
     void executeCMP ();
-
     void executeEOR ();
-
     void executeMOV ();
-
     void executeMUL ();
-
     void executeORR ();
-
     void executeSUB ();
 
     // General Organisation Variables

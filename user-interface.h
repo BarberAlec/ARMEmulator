@@ -1,10 +1,14 @@
 #include "ARM-file.h"
 #include <unistd.h>
 #include <ctime>
+#include <cstdlib>
+
 /**
  * 
  * 
- * Over arching Control Class 
+ * User interface helper class
+ * 
+ * Main function at bottom of file.
  * 
  *  Overall todo list:
  *  > Implement most common instructions                                                X
@@ -22,28 +26,30 @@
 
 
 
-class emulator{
+class ARMEmulatorUserInterface{
 public:
-    emulator ();
+    ARMEmulatorUserInterface ();
 
+    void start ();
 
     
 private:
 
+    void printOptions2User ();
+
+    bool checkStr4Spaces (std::string str);
+
     ARMFile aFile;
+    std::string fileName;
 };
 
 
 
 int main (){
-    std::cerr<<"BOOTING ARMEULATOR";
-    /*
-    for (int i = 0; i < 2000000000; i++){
-        if (i%300000691 == 0){
-            std::cerr<<".";
-        }
+    ARMEmulatorUserInterface interface;
+    interface.start ();
 
-    }*/
+    /*std::cerr<<"BOOTING ARMEULATOR";
     std::cout<<std::endl;
 
     ARMFile aFile;
@@ -54,6 +60,6 @@ int main (){
 
     aFile.printRegistersHex ();
 
-    aFile.closeSourceFile ();
+    aFile.closeSourceFile ();*/
     return 0;
 }

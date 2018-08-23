@@ -5,9 +5,17 @@ The ARMEmulator is an interpreter for the ARM instruction set. Devlopment for th
 
 Instructions:
 
-- Open notepad and save a new file in the ARMEulator's working directory called examples.txt.
+- To first compile the Interpreter, go to the working directory in terminal and execute the following command:
 
-- Go to your editors settings and ensure that tabs are not displayed using spaces (as is default on many applications).
+> make
+
+- Next, to run the interpreter, execute the following command:
+
+>./armulate
+
+- This will prompt the program to begin, follow the instructions as provided.
+
+- Once the text file opens, it is important to insure that tabs are not displayed as spaces as is the default for many text document viewers.
 
 - Write your ARM program using tab indentations before instructions always, no spaces between registers ( ADD r0,r1,r2) and all caps for instructions.
 
@@ -15,15 +23,9 @@ Instructions:
 
 - Do not have any empty lines
 
-- To compile the Interpreter, go to the working directory in terminal and execute the following command:
+- It is advisable to look at the example.txt to get a grasp of the enviroment.
 
-> make
-
-- To run your program, while still in the working directory in terminal, execute the following command:
-
->./armulate
-
--Enjoy!!
+- Enjoy!!
 
 
 Features: 
@@ -32,19 +34,19 @@ Features:
  
  - [X] Labels and Branching with B
 
- - [X] condition flags
+ - [X] Condition flags
  
- - [X] conditional execution
+ - [X] Conditional execution
 
- - [X] s feature (MOVS etc.)
+ - [X] S feature (MOVS etc.)
 
- - [X] character support
+ - [X] Character support
 
  - [ ] General robustness...
 
  - [X] An actual Make File
 
- - [ ] Passable UI
+ - [X] Passable UI
 
  - [ ] Logic shifts
 

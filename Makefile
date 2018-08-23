@@ -30,8 +30,8 @@ CFLAGS=-c -Wall
 
 all: emulator
 
-emulator: ARM-file.o instruction.o register.o emulator.o
-	$(CC) ARM-file.o instruction.o register.o emulator.o -o armulate
+emulator: ARM-file.o instruction.o register.o user-interface.o
+	$(CC) ARM-file.o instruction.o register.o user-interface.o -o armulate
 
 ARM-file.o: ARM-file.cc
 	$(CC) $(CFLAGS) ARM-file.cc
@@ -42,8 +42,8 @@ instruction.o: instruction.cc
 register.o: register.cc
 	$(CC) $(CFLAGS) register.cc
 
-emulator.o: emulator.cc
-	$(CC) $(CFLAGS) emulator.cc
+user-interface.o: user-interface.cc
+	$(CC) $(CFLAGS) user-interface.cc
 
 clean:
 	rm *o emulator
