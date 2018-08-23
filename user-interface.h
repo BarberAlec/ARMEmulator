@@ -34,13 +34,15 @@ public:
 
     
 private:
+    
+    void promptUser4DebugSett ();
 
-    void printOptions2User ();
 
     bool checkStr4Spaces (std::string str);
 
     ARMFile aFile;
     std::string fileName;
+    bool printRegsAfterEachInstruct;
 };
 
 
@@ -48,18 +50,5 @@ private:
 int main (){
     ARMEmulatorUserInterface interface;
     interface.start ();
-
-    /*std::cerr<<"BOOTING ARMEULATOR";
-    std::cout<<std::endl;
-
-    ARMFile aFile;
-    aFile.addSourceFile ("example.txt");
-    aFile.loadSourceFile ();
-
-    aFile.executeFile ();
-
-    aFile.printRegistersHex ();
-
-    aFile.closeSourceFile ();*/
     return 0;
 }
