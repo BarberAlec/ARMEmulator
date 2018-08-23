@@ -170,16 +170,18 @@ void ARMFile::loadSourceFile (){
             // Label present!
 
             // skip label
-            while (charHelper != ' ' && index != (curr_line.size () - 1)){
+            while (charHelper != ' ' && index != (curr_line.size () - 1) && charHelper != '\t'){
                 charHelper = curr_line.at (++index);
             }
-            
             //if no instruction after label
             if (index == (curr_line.size () - 1)){
                 continue;
             }
+            // skip gap after label
+            while ((charHelper == ' ' || charHelper == '\t')){
+                charHelper = curr_line.at (++index);
+            }
 
-            charHelper = curr_line.at (++index);
             while (charHelper != ' '){
                 if (charHelper == '\n' || charHelper == EOF){
                     std::cout << "FATAL ERROR: ARMFile::loadSourceFile could not comprehend line.... terminating" << std::endl;
@@ -324,7 +326,7 @@ void ARMFile::firstPassLoadSourceFile (){
             uint32_t index = -1;
             std::string lb = "";
             charHelper = curr_line.at (++index);
-            while (charHelper != ' ' && index != (curr_line.size () - 1)){
+            while (charHelper != ' ' && index != (curr_line.size () - 1) && charHelper != '\t'){
                 lb += charHelper;
                 charHelper = curr_line.at (++index);
             }
