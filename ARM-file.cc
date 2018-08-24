@@ -22,7 +22,8 @@ bool ARMFile::CompileToMachineInstructions (){
 }
 
 void ARMFile::initialiseMemory (){
-    // kinda pointless at the moment to be honest ... but shure look
+    condFlags = 0b11110000;
+    instructionVect.clear ();
 
     PC.setMem (0xA0000000);         // Setting program loaded to start at address 0xA0000000
     SP.setMem (0x90000000);         // Setting Stack Pointer tostart from pretty damn arbiary position
@@ -218,6 +219,7 @@ void ARMFile::loadSourceFile (){
             instruction x(command, arg1_int);
             x.setPCPointer (&PC);
             x.setCondFlags (&condFlags);
+            x.setinstructStr(curr_line);
             instructionVect.push_back (x);
             continue;
         }
@@ -254,6 +256,7 @@ void ARMFile::loadSourceFile (){
                     instruction x(command, arg1_point, arg2_point, arg3_point);
                     x.setPCPointer (&PC);
                     x.setCondFlags (&condFlags);
+                    x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -263,6 +266,7 @@ void ARMFile::loadSourceFile (){
                     instruction x(command, arg1_point, arg2_point, arg3_int);
                     x.setPCPointer (&PC);
                     x.setCondFlags (&condFlags);
+                    x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
                 }
             }
@@ -277,6 +281,7 @@ void ARMFile::loadSourceFile (){
                     instruction x(command, arg1_point, arg2_int, arg3_point);
                     x.setPCPointer (&PC);
                     x.setCondFlags (&condFlags);
+                    x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
                 }
                 else{
@@ -286,6 +291,7 @@ void ARMFile::loadSourceFile (){
                     instruction x(command, arg1_point, arg2_int, arg3_int);
                     x.setPCPointer (&PC);
                     x.setCondFlags (&condFlags);
+                    x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
                 }
             }
@@ -301,6 +307,7 @@ void ARMFile::loadSourceFile (){
                 instruction x(command, arg1_point, arg2_point);
                 x.setPCPointer (&PC);
                 x.setCondFlags (&condFlags);
+                x.setinstructStr(curr_line);
                 instructionVect.push_back (x);
             }
             else{
@@ -309,6 +316,7 @@ void ARMFile::loadSourceFile (){
                 instruction x(command, arg1_point, arg2_int);
                 x.setPCPointer (&PC);
                 x.setCondFlags (&condFlags);
+                x.setinstructStr(curr_line);
                 instructionVect.push_back (x);
             }
         }
@@ -342,7 +350,7 @@ void ARMFile::firstPassLoadSourceFile (){
     FILE.seekg(0, std::ios::beg);
 }
 
-void ARMFile::executeFile (){
+void ARMFile::executeFile (bool printAfterEachIter, bool printInstructsAsExecuted){
     if (instructionVect.size () != 0){
         for (;;){
             PC.setMem (PC.getMem () + 8);
@@ -354,6 +362,13 @@ void ARMFile::executeFile (){
             printRegistersHex ();
             std::cout << std::endl;*/
             //instructionVect.at ((PC.getMem () - 0xA0000008)/8).printInstructionInfo ();
+            if (printAfterEachIter){
+                printRegistersHex ();
+            }
+            if (printInstructsAsExecuted){
+                std::cout << "\t";
+                instructionVect.at ((PC.getMem () - 0xA0000008)/8).printInstructionStr ();
+            }
             instructionVect.at ((PC.getMem () - 0xA0000008)/8).execute ();      // Not happy with implementation, will implement proper file that
                                                                                 // will eventually simulate a drive in the future
         }

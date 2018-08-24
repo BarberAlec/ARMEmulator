@@ -53,3 +53,9 @@ Features:
  - [ ] Comments
 
  - [ ] Debugging features
+
+ - [ ] Mac Support
+
+ - [ ] Windows Support
+
+ - [X] Linux support (requires gedit)

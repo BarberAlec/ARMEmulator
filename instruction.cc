@@ -136,7 +136,6 @@ instruction::instruction (std::string command, reg* ar1, reg* ar2, reg* ar3){
     cond_flags = NULL;
 }
 
-
 instruction::instruction (std::string command, reg* ar1, uint32_t ar2, uint32_t ar3){
     opperand1 = ar1;
     opperand2 = NULL;
@@ -535,6 +534,14 @@ void instruction::printInstructionInfo (){
     std::cout << "NR_operand1: " << NR_operand1 << std::endl;
     std::cout << "NR_operand2: " << NR_operand2 << std::endl;
     std::cout << "NR_operand3: " << NR_operand3 << std::endl;
+}
+
+void instruction::printInstructionStr (){
+    std::cout << instructStr << std::endl;
+}
+
+void instruction::setinstructStr (std::string str){
+    instructStr = str;
 }
 
 bool instruction::updateFlags (std::string instruc, int command_length){

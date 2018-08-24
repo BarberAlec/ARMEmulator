@@ -42,7 +42,11 @@ private:
 
     ARMFile aFile;
     std::string fileName;
-    bool printRegsAfterEachInstruct;
+
+
+    bool printRegsAfterEachInstruct;    // defulat to false
+    bool resetCPSRAfterEachIter;        // defulat to true (just makes life easier)
+    bool printInstructAsExecuted;
 };
 
 

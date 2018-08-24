@@ -102,6 +102,8 @@ public:
 
     void setPCPointer (reg* p);
 
+    void setinstructStr (std::string str);
+
 
     enum_operats string2Operats (std::string input);
 
@@ -109,6 +111,8 @@ public:
     void execute ();
 
     void printInstructionInfo ();
+
+    void printInstructionStr ();
 
 private:
     // To be implemented soon !!!!!
@@ -153,6 +157,9 @@ private:
     void executeMUL ();
     void executeORR ();
     void executeSUB ();
+
+    // what the instuction line initial displayed
+    std::string instructStr;
 
     // General Organisation Variables
     uint8_t numberOperands;

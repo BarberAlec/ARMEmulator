@@ -45,7 +45,7 @@ public:
 
 
     // Execute File after loading contents
-    void executeFile ();
+    void executeFile (bool printAfterEachIter, bool printInstructsAsExecuted);
 
 private:
 
