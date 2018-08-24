@@ -28,7 +28,7 @@ void ARMFile::initialiseMemory (){
     PC.setMem (0xA0000000);         // Setting program loaded to start at address 0xA0000000
     SP.setMem (0x90000000);         // Setting Stack Pointer tostart from pretty damn arbiary position
                                     // may change value in future....
-    LP.setMem (0xFFFFFFFF);         // Honestly cant remember the puspose of this lad...
+    LR.setMem (0xFFFFFFFF);         // Honestly cant remember the puspose of this lad...
 }
 
 void ARMFile::addSourceFile (std::string fileName){
@@ -81,7 +81,7 @@ void ARMFile::printRegistersBits (){
     std::cout << "_____________________________________________________________________________________________________________________________________" << std::endl;
     
     std::cout << "|               r12              |               SP               |               LC               |               PC               |" << std::endl;
-    std::cout << "|" << std::bitset<32> (r12.getMem ()) << "|" << std::bitset<32> (SP.getMem ()) << "|" << std::bitset<32> (LP.getMem ()) << "|" 
+    std::cout << "|" << std::bitset<32> (r12.getMem ()) << "|" << std::bitset<32> (SP.getMem ()) << "|" << std::bitset<32> (LR.getMem ()) << "|" 
                 << std::bitset<32> (PC.getMem ()) << "|" << std::endl;
     std::cout << "-------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
 }
@@ -113,7 +113,7 @@ void ARMFile::printRegistersHex (){
     std::cout << "_____________________________________________" << std::endl;
     
     std::cout << "|    r12   |    SP    |    LC    |    PC    |" << std::endl;
-    std::cout << "| " << std::setw(8) << std::hex <<  (r12.getMem ()) << " | " << std::setw(8) << std::hex <<  (SP.getMem ()) << " | " << std::setw(8) << std::hex <<  (LP.getMem ()) << " | " 
+    std::cout << "| " << std::setw(8) << std::hex <<  (r12.getMem ()) << " | " << std::setw(8) << std::hex <<  (SP.getMem ()) << " | " << std::setw(8) << std::hex <<  (LR.getMem ()) << " | " 
                 << std::setw(8) << std::hex <<  (PC.getMem ()) << " |" << std::endl;
     std::cout << "---------------------------------------------" << std::endl;
 }
@@ -412,7 +412,7 @@ reg* ARMFile::string2Reg (std::string R){
                 return &SP;
             }
             if (R.at (0) == 'L'){
-                return &LP;
+                return &LR;
             }
             break;
         case 'C':
