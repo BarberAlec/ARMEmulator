@@ -96,7 +96,6 @@ here:                                               /* I am so sorry */
     std::cout << std::endl;
     if (input_char == 'y' || input_char == 'Y'){
         if (resetCPSRAfterEachIter){
-            std::cout << "got here" << std::endl;
             aFile.initialiseMemory ();
         }
         goto here;                                      /* Although henious, this is quite useful... */

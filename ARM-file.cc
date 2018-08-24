@@ -217,7 +217,7 @@ void ARMFile::loadSourceFile (){
         // check if their is only one argument
         if (index == (curr_line.size () - 1)){
             instruction x(command, arg1_int);
-            x.setPCPointer (&PC);
+            x.setSpecialRegPointer (&PC, &LR, &SP);
             x.setCondFlags (&condFlags);
             x.setinstructStr(curr_line);
             instructionVect.push_back (x);
@@ -254,7 +254,7 @@ void ARMFile::loadSourceFile (){
                     // third argument is a register
                     arg3_point = string2Reg (arg3);
                     instruction x(command, arg1_point, arg2_point, arg3_point);
-                    x.setPCPointer (&PC);
+                    x.setSpecialRegPointer (&PC, &LR, &SP);
                     x.setCondFlags (&condFlags);
                     x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
@@ -264,7 +264,7 @@ void ARMFile::loadSourceFile (){
                     arg3_int = string2Num (arg3);
 
                     instruction x(command, arg1_point, arg2_point, arg3_int);
-                    x.setPCPointer (&PC);
+                    x.setSpecialRegPointer (&PC, &LR, &SP);
                     x.setCondFlags (&condFlags);
                     x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
@@ -279,7 +279,7 @@ void ARMFile::loadSourceFile (){
                     arg3_point = string2Reg (arg3);
 
                     instruction x(command, arg1_point, arg2_int, arg3_point);
-                    x.setPCPointer (&PC);
+                    x.setSpecialRegPointer (&PC, &LR, &SP);
                     x.setCondFlags (&condFlags);
                     x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
@@ -289,7 +289,7 @@ void ARMFile::loadSourceFile (){
                     arg3_int = string2Num (arg3);
 
                     instruction x(command, arg1_point, arg2_int, arg3_int);
-                    x.setPCPointer (&PC);
+                    x.setSpecialRegPointer (&PC, &LR, &SP);
                     x.setCondFlags (&condFlags);
                     x.setinstructStr(curr_line);
                     instructionVect.push_back (x);
@@ -305,7 +305,7 @@ void ARMFile::loadSourceFile (){
                 arg2_point = string2Reg (arg2);
 
                 instruction x(command, arg1_point, arg2_point);
-                x.setPCPointer (&PC);
+                x.setSpecialRegPointer (&PC, &LR, &SP);
                 x.setCondFlags (&condFlags);
                 x.setinstructStr(curr_line);
                 instructionVect.push_back (x);
@@ -314,7 +314,7 @@ void ARMFile::loadSourceFile (){
                 // second argument is a number
                 arg2_int = string2Num (arg2);
                 instruction x(command, arg1_point, arg2_int);
-                x.setPCPointer (&PC);
+                x.setSpecialRegPointer (&PC, &LR, &SP);
                 x.setCondFlags (&condFlags);
                 x.setinstructStr(curr_line);
                 instructionVect.push_back (x);
@@ -411,6 +411,8 @@ reg* ARMFile::string2Reg (std::string R){
             if (R.at (0) == 'S'){
                 return &SP;
             }
+            break;
+        case 'R':
             if (R.at (0) == 'L'){
                 return &LR;
             }

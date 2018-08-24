@@ -203,7 +203,7 @@ instruction::instruction (std::string command, reg* ar1, uint32_t ar2, reg* ar3)
 }
 
 instruction::enum_operats instruction::string2Operats (std::string input){
-
+    
     std::string input_3 = input.substr (0,3);
     std::string input_2 = input.substr (0,2);
     std::string input_1 = input.substr (0,1);
@@ -229,33 +229,12 @@ instruction::enum_operats instruction::string2Operats (std::string input){
         cond_code = getCondCode (input, 3);
         return AND;
     }
-    else if (input_1.compare("B") == 0){
-        if (updateFlags (input, 1)){
-            update_flag = true;
-        }
-        cond_code = getCondCode (input, 1);
-        return B;
-    }
     else if (input_3.compare("BIC") == 0){
         if (updateFlags (input, 3)){
             update_flag = true;
         }
         cond_code = getCondCode (input, 3);
         return BIC;
-    }
-    else if (input_2.compare("BL") == 0){
-        if (updateFlags (input, 2)){
-            update_flag = true;
-        }
-        cond_code = getCondCode (input, 2);
-        return BL;
-    }
-    else if (input_2.compare("BX") == 0){
-        if (updateFlags (input, 2)){
-            update_flag = true;
-        }
-        cond_code = getCondCode (input, 2);
-        return BX;
     }
     else if (input_3.compare("CDP") == 0){
         if (updateFlags (input, 3)){
@@ -446,6 +425,27 @@ instruction::enum_operats instruction::string2Operats (std::string input){
         cond_code = getCondCode (input, 3);
         return TST;
     }
+    else if (input_2.compare("BL") == 0){
+        if (updateFlags (input, 2)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 2);
+        return BL;
+    }
+    else if (input_2.compare("BX") == 0){
+        if (updateFlags (input, 2)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 2);
+        return BX;
+    }
+    else if (input_1.compare("B") == 0){
+        if (updateFlags (input, 1)){
+            update_flag = true;
+        }
+        cond_code = getCondCode (input, 1);
+        return B;
+    }
     else{
         return enum_operats::UNDEFINED;
     }
@@ -472,8 +472,10 @@ void instruction::setCondFlags (uint8_t *ptr){
     cond_flags = ptr;
 }
 
-void instruction::setPCPointer (reg* p){
+void instruction::setSpecialRegPointer (reg* p, reg* l, reg* s){
     pc = p;
+    lr = l;
+    sp = s;
 }
 
 void instruction::execute (){
@@ -494,6 +496,18 @@ void instruction::execute (){
             executeB ();
             break;
 
+        case BL:
+            executeBL ();
+            break;
+        
+        case BX:
+            executeBX ();
+            break;
+
+        case BLX:
+            executeBLX ();
+            break;
+        
         case BIC:
             executeBIC ();
             break;
@@ -828,17 +842,50 @@ void instruction::executeB (){
     }
 }
 
+void instruction::executeBL (){
+    lr->setMem(pc->getMem ());
+    if (numberOperands == 1){
+        pc->setMem (NR_operand1);
+    }  
+    else{
+        std::cout << "ERROR: B can only have one argument..." << std::endl;
+    }
+}
+
+void instruction::executeBX (){
+    // do something intelligent
+    if (numberOperands == 1){
+        pc->setMem (NR_operand1);
+    }  
+    else{
+        std::cout << "ERROR: B can only have one argument..." << std::endl;
+    }
+}
+
+void instruction::executeBLX (){
+    lr->setMem(pc->getMem ());
+    if (numberOperands == 1){
+        pc->setMem (NR_operand1);
+    }  
+    else{
+        std::cout << "ERROR: B can only have one argument..." << std::endl;
+    }
+}
+
 void instruction::executeBIC (){
     if (numberOperands == 1){
         std::cout << "ERROR: executeBIC requires 2 or 3 arguments...exiting" << std::endl;
         exit (-1);
     }
     else if (numberOperands == 2){
+        std::cout << "number of opeeraned is 2" << std::endl;
         if (opperand2 == NULL){
-            opperand1->setMem (NR_operand1 & (0x11111111 ^ NR_operand2));
+            std::cout << "0x11111111 ^ NR_operand2: " << (int)(0x11111111 ^ NR_operand2) << std::endl;
+            std::cout << "opperand1->getMem(): " << (int)(opperand1->getMem()) << std::endl;
+            opperand1->setMem (opperand1->getMem() & (0x11111111 ^ NR_operand2));
         }
         else{
-            opperand1->setMem (NR_operand1 & (0x11111111 ^ opperand2->getMem ()));
+            opperand1->setMem (opperand1->getMem() & (0x11111111 ^ opperand2->getMem ()));
         }
     }
     else{

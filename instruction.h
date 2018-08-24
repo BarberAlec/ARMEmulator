@@ -45,6 +45,7 @@ public:
         BIC,        // X
         BL,         // Got my eyes on you
         BX,         // you too laddy
+        BLX,
         CDP,
         CMN,
         CMP,
@@ -100,7 +101,7 @@ public:
     // Set condition Flags pointer
     void setCondFlags (uint8_t *ptr);
 
-    void setPCPointer (reg* p);
+    void setSpecialRegPointer (reg* p, reg* l, reg* s);
 
     void setinstructStr (std::string str);
 
@@ -151,6 +152,9 @@ private:
     void executeADD ();
     void executeAND ();
     void executeB ();
+    void executeBL ();
+    void executeBX ();
+    void executeBLX ();
     void executeBIC ();
     void executeCMP ();
     void executeEOR ();
@@ -177,6 +181,8 @@ private:
 
     // Pointer to PC register (needed for branching)
     reg* pc;
+    reg* lr;
+    reg* sp;
 
     // Non-register arguments
     uint32_t NR_operand1;
