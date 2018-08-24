@@ -494,6 +494,10 @@ void instruction::execute (){
             executeB ();
             break;
 
+        case BIC:
+            executeBIC ();
+            break;
+
         case CMP:
             executeCMP ();
             break;
@@ -822,6 +826,41 @@ void instruction::executeB (){
     else{
         std::cout << "ERROR: B can only have one argument..." << std::endl;
     }
+}
+
+void instruction::executeBIC (){
+    if (numberOperands == 1){
+        std::cout << "ERROR: executeBIC requires 2 or 3 arguments...exiting" << std::endl;
+        exit (-1);
+    }
+    else if (numberOperands == 2){
+        if (opperand2 == NULL){
+            opperand1->setMem (NR_operand1 & (0x11111111 ^ NR_operand2));
+        }
+        else{
+            opperand1->setMem (NR_operand1 & (0x11111111 ^ opperand2->getMem ()));
+        }
+    }
+    else{
+        if (opperand2 == NULL){
+            if (opperand3 == NULL){
+                opperand1->setMem (NR_operand2 & (0x11111111 ^ NR_operand3));
+            }
+            else{
+                opperand1->setMem (NR_operand2 & (0x11111111 ^ opperand3->getMem ()));
+            }
+        }
+        else{
+            if (opperand3 == NULL){
+                opperand1->setMem (opperand2->getMem () & (0x11111111 ^ NR_operand3));
+            }
+            else{
+                opperand1->setMem (opperand2->getMem () & (0x11111111 ^ opperand3->getMem ()));
+            }
+        }
+    }
+    // update N and Z flags
+    updateNegZero ();
 }
 
 void instruction::executeCMP (){

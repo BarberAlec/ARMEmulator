@@ -42,7 +42,7 @@ public:
         ADD,        // X
         AND,        // X
         B,          // X
-        BIC,
+        BIC,        // X
         BL,         // Got my eyes on you
         BX,         // you too laddy
         CDP,
@@ -151,6 +151,7 @@ private:
     void executeADD ();
     void executeAND ();
     void executeB ();
+    void executeBIC ();
     void executeCMP ();
     void executeEOR ();
     void executeMOV ();
