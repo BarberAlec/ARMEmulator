@@ -42,8 +42,6 @@ Features:
 
  - [X] Character support
 
- - [ ] General robustness...
-
  - [X] An actual Make File
 
  - [X] Passable UI
