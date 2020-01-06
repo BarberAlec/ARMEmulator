@@ -30,7 +30,7 @@ Instructions:
 
 Features: 
 
- - [X] Basic instructions such as ADD AND and EOR
+ - [X] Fundemental instructions such as ADD AND and EOR
  
  - [X] Labels and Branching with B
 
@@ -42,9 +42,9 @@ Features:
 
  - [X] Character support
 
- - [X] An actual Make File
+ - [X] Comprehensive Make File
 
- - [X] Passable UI
+ - [X] UI
 
  - [ ] Logic shifts
 
